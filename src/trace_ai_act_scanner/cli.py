@@ -32,6 +32,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Omit code snippets from reports to protect IP",
     )
     parser.add_argument(
+        "--raw",
+        action="store_true",
+        help="Disable B2B context filtering and show all raw signals (may increase false positives)",
+    )
+    parser.add_argument(
         "--rules-dir",
         help="Optional directory with additional/override rules (*.yaml)",
     )
@@ -65,6 +70,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         config=config,
         no_snippets=args.no_snippets,
         custom_rules_dir=rules_dir,
+        raw_mode=args.raw,
     )
 
     if args.markdown:

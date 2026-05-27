@@ -27,11 +27,15 @@
     - data_quality
     - bias_audit
     - dataset_card
+    - validate_schema
+    - validate_data
   phrases:
     - "data governance"
     - "data quality"
     - "bias audit"
     - "dataset card"
+    - "validate schema"
+    - "validate data"
 
 - id: CTRL_TECHNICAL_DOCUMENTATION
   bucket: governance_control
@@ -79,11 +83,15 @@
     - watermark
     - provenance
     - c2pa
+    - explain
+    - transparency
+    - user_guide
   phrases:
     - "instructions for use"
     - "user disclosure"
     - "machine-readable"
     - "content provenance"
+    - "user guide"
 
 - id: CTRL_HUMAN_OVERSIGHT
   bucket: governance_control

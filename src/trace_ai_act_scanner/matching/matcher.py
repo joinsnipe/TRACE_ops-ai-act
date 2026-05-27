@@ -19,6 +19,30 @@ from trace_ai_act_scanner.matching.tokenizer import split_identifier
 from trace_ai_act_scanner.models import Rule
 
 
+B2B_INDICATORS = [
+    "company_", "brand_", "corporate_", "b2b", "registration_",
+    "founding_date", "employees", "legal_form", "tax_id"
+]
+
+
+def is_likely_b2b_context(symbol: str, context: str) -> bool:
+    """Check if the symbol or context strongly indicates a B2B or non-personal scope."""
+    symbol_lower = symbol.lower()
+    if any(ind in symbol_lower for ind in B2B_INDICATORS):
+        return True
+    
+    # Check for dictionary keys or surrounding variables in the context
+    context_lower = context.lower()
+    if any(ind in context_lower for ind in B2B_INDICATORS):
+        return True
+        
+    keys_to_check = ["company_name", "brand_name", "legal_form"]
+    if any(k in context_lower for k in keys_to_check):
+        return True
+        
+    return False
+
+
 def match_rule(rule: Rule, symbol: str, context: str) -> Optional[Tuple[str, float]]:
     """Apply ``rule`` to ``symbol`` + ``context``.
 

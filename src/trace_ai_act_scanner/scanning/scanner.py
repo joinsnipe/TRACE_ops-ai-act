@@ -15,7 +15,7 @@ from trace_ai_act_scanner.aggregation.risk import compute_risk_score
 from trace_ai_act_scanner.aggregation.viability import classify_viability
 from trace_ai_act_scanner.extractors.python_ast import extract_python_items
 from trace_ai_act_scanner.extractors.text import extract_text_items
-from trace_ai_act_scanner.matching.matcher import match_rule
+from trace_ai_act_scanner.matching.matcher import is_likely_b2b_context, match_rule
 from trace_ai_act_scanner.matching.tokenizer import line_context
 from trace_ai_act_scanner.models import Rule, ScanReport, ScanSummary, Signal
 from trace_ai_act_scanner.rules import (
@@ -41,6 +41,7 @@ def _scan_file(
     target_root: Path,
     rules: Sequence[Rule],
     no_snippets: bool,
+    raw_mode: bool = False,
 ) -> Tuple[List[Signal], Dict[str, List[Dict[str, Any]]]]:
     try:
         source = path.read_text(encoding="utf-8", errors="ignore")
@@ -90,13 +91,27 @@ def _scan_file(
                     }
                 )
             else:
+                b2b_context = is_likely_b2b_context(symbol, context)
+                if rule.id == "GDPR_PERSONAL_DATA_PROCESSING":
+                    if b2b_context:
+                        if not raw_mode:
+                            continue
+                        severity = "INFORMATIONAL"
+                        guidance = "This signal appears to be B2B-related. If no natural person data is involved, document this in your AI Act compliance register and consider adding a .traceignore entry with reason 'B2B context'."
+                    else:
+                        severity = rule.severity
+                        guidance = "Review whether this variable contains personal data. If yes, implement GDPR controls (lawful basis, DPIA, transparency) and map to AI Act obligations. If not, add a .traceignore entry with detailed reason."
+                else:
+                    severity = rule.severity
+                    guidance = rule.guidance
+
                 signals.append(
                     Signal(
                         rule_id=rule.id,
                         bucket=rule.bucket,
                         legal_basis=rule.legal_basis,
                         label=rule.label,
-                        severity=rule.severity,
+                        severity=severity,
                         weight=rule.weight,
                         file=rel,
                         line=line,
@@ -105,7 +120,7 @@ def _scan_file(
                         evidence=evidence[:700] if not no_snippets else evidence,
                         confidence=conf,
                         node_type=node_type,
-                        guidance=rule.guidance,
+                        guidance=guidance,
                     )
                 )
     return signals, controls
@@ -117,6 +132,7 @@ def scan(
     config: Optional[Dict[str, Any]] = None,
     no_snippets: bool = False,
     custom_rules_dir: Optional[Path] = None,
+    raw_mode: bool = False,
 ) -> ScanReport:
     """Run the scanner over ``target`` and return a :class:`ScanReport`."""
     config = config or {}
@@ -139,7 +155,7 @@ def scan(
     for path in iter_files(target_path, excludes):
         files_scanned += 1
         root = target_path if target_path.is_dir() else path.parent
-        file_signals, file_controls = _scan_file(path, root, all_rules, no_snippets)
+        file_signals, file_controls = _scan_file(path, root, all_rules, no_snippets, raw_mode)
         all_signals.extend(file_signals)
         for cid, hits in file_controls.items():
             controls.setdefault(cid, []).extend(hits)
