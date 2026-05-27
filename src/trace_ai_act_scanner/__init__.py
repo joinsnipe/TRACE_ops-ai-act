@@ -18,7 +18,7 @@ compliance with Regulation (EU) 2024/1689 or GDPR.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "1.5.0"
 SCHEMA_VERSION = "1.0"
 
 from trace_ai_act_scanner.models import Rule, ScanReport, ScanSummary, Signal
