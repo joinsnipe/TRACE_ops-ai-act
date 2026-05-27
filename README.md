@@ -91,5 +91,15 @@ It provides a lightweight technical triage layer for early signal detection in s
 4. **Analyze the Results:**
    Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your legal/compliance team to evaluate the structural risks detected before releasing your product.
 
+## 🏢 Enterprise Structural Audit
+
+This free scanner covers regulatory signal detection. For organizations that need a **deeper architectural analysis**, TRACE offers a professional Structural Audit service:
+
+- **Codebase topology mapping** — God Nodes, community fractures, cohesion scoring
+- **Narrative-architecture alignment** — does your pitch match your product?
+- **Zero-trust extraction** — your source code never leaves your servers
+
+→ See [`enterprise_structural_audit/`](enterprise_structural_audit/) for details and the extraction tool.
+
 ---
-*Maintained by TRACE™ - Forensic Intelligence & Structural Diagnostics.*
+*Maintained by TRACE™ — Forensic Intelligence & Structural Diagnostics.*
