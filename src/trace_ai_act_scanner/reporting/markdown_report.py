@@ -25,10 +25,19 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Risk score:** {s.risk_score}/100",
         f"**Coverage confidence:** {s.coverage_confidence}",
         f"**Static governance readiness:** `{s.readiness_state}`",
-        "> *Note: Readiness state only applies when the scanner detects signals that require governance controls. A state of OUT_OF_SCOPE means no risk signals were found, so no specific AI Act controls are triggered by this scan. This does not constitute legal compliance advice.*",
+        (
+            "> *Note: Readiness state only applies when the scanner detects signals that require governance controls. A state of OUT_OF_SCOPE means no risk signals were found, so no specific AI Act controls are triggered by this scan. This does not constitute legal compliance advice.*"
+            if s.readiness_state != "REVIEWED_NO_ACTION"
+            else "> *Note: Signals were found but were manually reviewed and silenced via .traceignore (considered not applicable or false positives). Audit trail available.*"
+        ),
         f"**Applicability:** {s.applicability.get('status', 'UNKNOWN')}",
         f"  - {s.applicability.get('message', '')}",
         f"**Viability:** `{s.viability}`",
+    ]
+    if s.no_ignore_used:
+        lines.insert(2, "**Raw scan (--no-ignore):** `True`")
+        
+    lines += [
         "",
         "## Signal summary",
         "",

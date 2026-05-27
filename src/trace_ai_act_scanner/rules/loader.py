@@ -46,6 +46,7 @@ def _rule_from_dict(data: dict) -> Rule:
         context_terms=tuple(data.get("context_terms") or ()),
         required_context=tuple(data.get("required_context") or ()),
         negative_terms=tuple(data.get("negative_terms") or ()),
+        term_exclusions=dict(data.get("term_exclusions") or {}),
         guidance=(data.get("guidance") or "").strip(),
         contradicts_public_claims=tuple(data.get("contradicts_public_claims") or ()),
     )

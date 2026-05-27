@@ -117,6 +117,7 @@ def scan(
     config: Optional[Dict[str, Any]] = None,
     no_snippets: bool = False,
     custom_rules_dir: Optional[Path] = None,
+    no_ignore: bool = False,
 ) -> ScanReport:
     """Run the scanner over ``target`` and return a :class:`ScanReport`."""
     config = config or {}
@@ -145,7 +146,7 @@ def scan(
             controls.setdefault(cid, []).extend(hits)
 
     # Apply .traceignore filtering
-    ignores = load_ignores(target_path)
+    ignores = load_ignores(target_path) if not no_ignore else []
     initial_signals_count = len(all_signals)
     silenced_signals = []
     if ignores:
@@ -154,7 +155,7 @@ def scan(
 
     risk_score, coverage_confidence = compute_risk_score(all_signals, config)
     readiness_state, missing_controls = compute_readiness(
-        all_signals, controls, required_controls_by_bucket
+        all_signals, silenced_signals, controls, required_controls_by_bucket
     )
 
     blockers = sum(
@@ -235,6 +236,7 @@ def scan(
         gdpr_overlaps=gdpr,
         governance_controls_detected=control_count,
         missing_governance_controls=missing_controls,
+        no_ignore_used=no_ignore,
         notes=notes,
     )
 

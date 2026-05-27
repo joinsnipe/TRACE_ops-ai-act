@@ -11,15 +11,31 @@
     - personal_data
     - pii
     - profile
+    - data
+    - location
+    - trust
+    - score
     - profiling
     - user_id
     - email
     - phone
-    - location
     - biometric
     - health
     - criminal
     - sensitive
+  term_exclusions:
+    profile:
+      exclude_if_parent: ["company_", "brand_", "corporate_"]
+    data:
+      exclude_if_assign: ["statistical_", "aggregated_", "anonymous_"]
+    location:
+      exclude_if_parent: ["registration_", "office_", "headquarters_"]
+    trust:
+      exclude_if_context: ["b2b"]
+      exclude_if_assign: ["corporate_score"]
+    score:
+      exclude_if_context: ["b2b"]
+      exclude_if_assign: ["spe_score_company"]
   phrases:
     - "personal data"
     - "data subject"

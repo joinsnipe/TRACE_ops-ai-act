@@ -43,9 +43,12 @@ def filter_signals(signals: List[Signal], ignores: List[Dict]) -> Tuple[List[Sig
             match_rule_id = rule.get("rule_id") == sig.rule_id if "rule_id" in rule else True
             match_file = str(rule.get("file")) in sig.file if "file" in rule else True
             match_line = rule.get("line") == sig.line if "line" in rule else True
+            match_symbol = rule.get("symbol") == sig.symbol if "symbol" in rule else True
+            match_matched = rule.get("matched") == sig.matched if "matched" in rule else True
+            match_context = rule.get("context") in sig.evidence if "context" in rule else True
             
             # A rule must specify at least something to match, and all specified conditions must be true
-            if match_rule_id and match_file and match_line and any(k in rule for k in ("rule_id", "file", "line")):
+            if match_rule_id and match_file and match_line and match_symbol and match_matched and match_context and any(k in rule for k in ("rule_id", "file", "line", "symbol", "matched", "context")):
                 should_ignore = True
                 ignore_reason = rule.get("reason", "No reason provided in .traceignore")
                 break

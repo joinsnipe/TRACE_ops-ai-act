@@ -47,10 +47,30 @@ def match_rule(rule: Rule, symbol: str, context: str) -> Optional[Tuple[str, flo
             atomic_term_tokens and all(t in tokens for t in atomic_term_tokens)
         ):
             if is_negated_config_context(term, haystack):
-                return None
+                continue
+            
+            # Semantic context exclusions
+            if term_norm in rule.term_exclusions:
+                exclusions = rule.term_exclusions[term_norm]
+                exclude = False
+                for ep in exclusions.get("exclude_if_parent", []):
+                    if ep.lower() in symbol.lower():
+                        exclude = True
+                        break
+                for ea in exclusions.get("exclude_if_assign", []):
+                    if ea.lower() in symbol.lower() or ea.lower() in context.lower():
+                        exclude = True
+                        break
+                for ec in exclusions.get("exclude_if_context", []):
+                    if ec.lower() in context.lower() or ec.lower() in symbol.lower():
+                        exclude = True
+                        break
+                if exclude:
+                    continue
+                    
             conf = score_confidence(rule, context, symbol, term)
             if negative_hit and conf < 0.65:
-                return None
+                continue
             return term, conf
 
     # 2) Phrases.

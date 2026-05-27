@@ -39,6 +39,7 @@ class Rule:
     context_terms: Tuple[str, ...] = ()
     required_context: Tuple[str, ...] = ()
     negative_terms: Tuple[str, ...] = ()
+    term_exclusions: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     guidance: str = ""
     contradicts_public_claims: Tuple[str, ...] = ()
 
@@ -82,6 +83,7 @@ class ScanSummary:
     gdpr_overlaps: int
     governance_controls_detected: int
     missing_governance_controls: List[str]
+    no_ignore_used: bool = False
     notes: List[str] = field(default_factory=list)
 
 

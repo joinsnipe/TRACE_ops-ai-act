@@ -9,11 +9,14 @@ from trace_ai_act_scanner.models import Signal
 
 def compute_readiness(
     signals: Sequence[Signal],
+    silenced_signals: Sequence[Dict[str, Any]],
     controls: Dict[str, List[Dict[str, Any]]],
     required_controls_by_bucket: Dict[str, List[str]],
 ) -> Tuple[str, List[str]]:
     """Return ``(readiness_state_string, sorted list of missing control ids)``."""
     if not signals:
+        if silenced_signals:
+            return "REVIEWED_NO_ACTION", []
         return "OUT_OF_SCOPE", []
         
     required: set = set()
