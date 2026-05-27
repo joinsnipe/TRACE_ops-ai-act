@@ -11,8 +11,11 @@ def compute_readiness(
     signals: Sequence[Signal],
     controls: Dict[str, List[Dict[str, Any]]],
     required_controls_by_bucket: Dict[str, List[str]],
-) -> Tuple[int, List[str]]:
-    """Return ``(readiness_score 0..100, sorted list of missing control ids)``."""
+) -> Tuple[str, List[str]]:
+    """Return ``(readiness_state_string, sorted list of missing control ids)``."""
+    if not signals:
+        return "OUT_OF_SCOPE", []
+        
     required: set = set()
     for sig in signals:
         required.update(required_controls_by_bucket.get(sig.bucket, []))
@@ -21,7 +24,12 @@ def compute_readiness(
     missing = sorted(cid for cid in required if cid not in detected)
 
     if not required:
-        return 100, missing
+        return "ALIGNED", missing
 
-    score = int(round(100 * (len(required) - len(missing)) / len(required)))
-    return score, missing
+    detected_count = len(required) - len(missing)
+    if detected_count == 0:
+        return "BASELINE", missing
+    elif detected_count < len(required):
+        return "DEVELOPING", missing
+    else:
+        return "ALIGNED", missing

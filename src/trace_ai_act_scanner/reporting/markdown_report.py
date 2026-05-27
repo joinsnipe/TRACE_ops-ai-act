@@ -24,8 +24,10 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Signals found:** {s.signals_total}",
         f"**Risk score:** {s.risk_score}/100",
         f"**Coverage confidence:** {s.coverage_confidence}",
-        f"**Static governance readiness:** {s.readiness_score}/100",
-        "> *Note: Based on statically detectable controls. Does not evaluate organizational or documentary controls.*",
+        f"**Static governance readiness:** `{s.readiness_state}`",
+        "> *Note: Readiness state only applies when the scanner detects signals that require governance controls. A state of OUT_OF_SCOPE means no risk signals were found, so no specific AI Act controls are triggered by this scan. This does not constitute legal compliance advice.*",
+        f"**Applicability:** {s.applicability.get('status', 'UNKNOWN')}",
+        f"  - {s.applicability.get('message', '')}",
         f"**Viability:** `{s.viability}`",
         "",
         "## Signal summary",
@@ -95,6 +97,19 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
     for note in s.notes:
         lines.append(f"- {note}")
         
+    if s.silenced_summary and s.silenced_summary.get("total_silenced", 0) > 0:
+        lines += [
+            "",
+            "## Silenced Summary",
+            "",
+            f"**Total silenced:** {s.silenced_summary.get('total_silenced')}",
+            f"**Note:** {s.silenced_summary.get('note')}",
+            "",
+            "### By Rule",
+        ]
+        for rule, count in s.silenced_summary.get("by_rule", {}).items():
+            lines.append(f"- `{rule}`: {count}")
+            
     if report.silenced_signals:
         lines += ["", "## Silenced Signals (Audit Trail)", ""]
         for sil in report.silenced_signals:

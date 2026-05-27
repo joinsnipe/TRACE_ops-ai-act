@@ -72,7 +72,9 @@ class ScanSummary:
     signals_total: int
     risk_score: int
     coverage_confidence: float
-    readiness_score: int
+    readiness_state: str
+    applicability: Dict[str, str]
+    silenced_summary: Dict[str, Any]
     viability: str
     blockers: int
     potential_high_risk: int

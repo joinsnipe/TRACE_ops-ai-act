@@ -153,7 +153,7 @@ def scan(
     ignored_count = len(silenced_signals)
 
     risk_score, coverage_confidence = compute_risk_score(all_signals, config)
-    readiness_score, missing_controls = compute_readiness(
+    readiness_state, missing_controls = compute_readiness(
         all_signals, controls, required_controls_by_bucket
     )
 
@@ -201,6 +201,23 @@ def scan(
         notes.append(f"{ignored_count} signals were silenced via .traceignore exclusions.")
 
     control_count = sum(1 for cid, hits in controls.items() if hits)
+    
+    applicability = {
+        "status": "SIGNALS_DETECTED" if all_signals else "NO_AI_ACT_SIGNALS_DETECTED",
+        "message": (
+            "AI Act obligations may apply based on severity." if all_signals 
+            else "This scan did not detect any signals that typically trigger AI Act obligations. However, a clean scan does not guarantee legal exemption. Review the system's actual use case with legal counsel."
+        )
+    }
+    
+    silenced_summary = {
+        "total_silenced": len(silenced_signals),
+        "by_rule": {},
+        "note": "These signals were manually reviewed and silenced via .traceignore. Silencing is documented for auditability."
+    }
+    for sil in silenced_signals:
+        rule_id = sil.get("rule_id", "Unknown")
+        silenced_summary["by_rule"][rule_id] = silenced_summary["by_rule"].get(rule_id, 0) + 1
 
     summary = ScanSummary(
         target=target_path.name,
@@ -208,7 +225,9 @@ def scan(
         signals_total=len(all_signals),
         risk_score=risk_score,
         coverage_confidence=coverage_confidence,
-        readiness_score=readiness_score,
+        readiness_state=readiness_state,
+        applicability=applicability,
+        silenced_summary=silenced_summary,
         viability=classify_viability(risk_score, blockers, high_risk, len(missing_controls)),
         blockers=blockers,
         potential_high_risk=high_risk,
