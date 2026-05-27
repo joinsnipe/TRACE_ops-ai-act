@@ -15,6 +15,12 @@ Most legal audits rely on documentation and interviews. **TRACE™ AI Act Compli
 
 This open-source extraction script uses Abstract Syntax Tree (AST) parsing to statically analyze your codebase. It mathematically maps variables, function calls, and structural dependencies against **15 specific legal vectors** derived directly from the EU AI Act (Article 5 prohibited practices and Annex III high-risk systems).
 
+## 🔬 Scientific Foundation & Methodology
+
+This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper included in this repository:
+
+📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture](./Structural_Asymmetries_in_the_EU_AI_Act__A_Computational_Forensic_Analysis_of_Legislative_Architecture.pdf)**
+
 ## 🛡️ The Zero-Trust Guarantee: "We don't want your code"
 
 In regulatory audits, handing over your proprietary source code to consultants or lawyers is a massive security risk. 
