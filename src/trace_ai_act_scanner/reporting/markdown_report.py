@@ -24,7 +24,7 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Signals found:** {s.signals_total}",
         f"**Risk score:** {s.risk_score}/100",
         f"**Coverage confidence:** {s.coverage_confidence}",
-        f"**Governance readiness:** {s.readiness_score}/100",
+        f"**Static governance readiness:** {s.readiness_score}/100",
         "> *Note: Based on statically detectable controls. Does not evaluate organizational or documentary controls.*",
         f"**Viability:** `{s.viability}`",
         "",

@@ -203,7 +203,7 @@ def scan(
     control_count = sum(1 for cid, hits in controls.items() if hits)
 
     summary = ScanSummary(
-        target=target,
+        target=target_path.name,
         files_scanned=files_scanned,
         signals_total=len(all_signals),
         risk_score=risk_score,
