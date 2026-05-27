@@ -17,9 +17,9 @@ This open-source extraction script uses Abstract Syntax Tree (AST) parsing to st
 
 ## 🔬 Scientific Foundation & Methodology
 
-This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper included in this repository:
+This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper:
 
-📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture](./Structural_Asymmetries_in_the_EU_AI_Act__A_Computational_Forensic_Analysis_of_Legislative_Architecture.pdf)**
+📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture (Zenodo)](https://zenodo.org/records/20284633)**
 
 ## 🛡️ The Zero-Trust Guarantee: "We don't want your code"
 
