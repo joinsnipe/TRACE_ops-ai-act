@@ -31,6 +31,10 @@ coverage.xml
 trace-report.json
 trace-report.md
 trace.sarif
+report.json
+report.md
+test_*.json
+out*.json
 
 # OS
 .DS_Store

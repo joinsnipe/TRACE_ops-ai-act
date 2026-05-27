@@ -4,7 +4,7 @@
 
 Please **do not** open public GitHub issues for security vulnerabilities.
 
-Send a private report to **security@…** with:
+Send a private report to **security@tracesuite.com** with:
 
 - A description of the issue.
 - Steps to reproduce or a proof-of-concept.
