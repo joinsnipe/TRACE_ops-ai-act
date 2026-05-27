@@ -1,90 +1,84 @@
 <div align="center">
-  <img src="./trace_logo.png" width="120" alt="TRACE Logo">
-  <h1>TRACE™ Structural Extractor</h1>
-  <p><b>We mathematically align your corporate communication with your structural codebase architecture.</b></p>
-  <p><i>Zero-Trust Codebase Topology Extractor for Enterprise Audits</i></p>
+  <img src="../trace_logo.png" width="120" alt="TRACE Logo">
+  <h1>TRACE™ AI Act Risk Scanner</h1>
+  <p><b>Open-source technical scanner for early EU AI Act and GDPR risk signals.</b></p>
+  <p><i>A first-pass technical triage layer to analyze your architecture without exposing source code.</i></p>
 </div>
 
 ---
 
-## 🏗️ What is this?
+## 🏛️ What is this?
 
-Every tech company has two bodies: the **narrative** (the pitch deck, the website) and the **technical architecture** (the codebase, the actual product). Most consultancies audit one or the other. Never both. Never with the same mathematics.
+TRACE AI Act Risk Scanner analyzes source code and lightweight configuration files to detect technical signals that may require review under **Regulation (EU) 2024/1689 (the EU Artificial Intelligence Act)** and the **GDPR**.
 
-**TRACE™ Structural Audits do both.**
+It is designed strictly as an **early-warning technical triage layer**, not as a legal opinion.
 
-This tool is the official open-source extraction script for TRACE™ Codebase Auditing. We convert your codebase into a mathematical graph (nodes + relationships) and apply network topology to answer three critical questions:
+## 🛡️ The Zero-Trust Guarantee
 
-1. **What does everything depend on?** → *God Nodes* (central points of failure).
-2. **What parts are isolated?** → *Community Fractures* (zombie code, disconnected modules).
-3. **Is it coherent or a collection of loose pieces?** → *Cohesion Score* (0 to 1).
-
-We don't do bug reviews. We don't judge code style. We map structural architecture.
-
-## 🛡️ The Zero-Trust Guarantee: "We don't want your code"
-
-In due diligence processes, handing over your proprietary source code is a massive friction point. 
+In regulatory audits, handing over your proprietary source code is a massive security risk. 
 That's why **we don't need it.**
 
-This open-source script is designed to run LOCALLY on your machine. You can read `trace_extractor.py` (it is less than 150 lines). It uses Abstract Syntax Tree (AST) parsing and regex heuristics to:
+This script runs **LOCALLY** on your servers. It uses Abstract Syntax Tree (AST) parsing to detect structural patterns (like `detect_mood`, `score_candidate_auto`, or `personal_data`) and generates a clean technical report.
 
-- ✅ **EXTRACT**: Class names, Function names, Function call connections, Cyclomatic Complexity metrics, and LOC.
-- ✅ **SUPPORT**: Python (`.py`), JavaScript (`.js`, `.jsx`), and TypeScript (`.ts`, `.tsx`).
-- ❌ **IGNORE**: Variables, hardcoded strings, business logic, passwords, API keys, and database schemas.
-- ❌ **OFFLINE**: The script does not make any network requests. It saves a `.json` file locally.
+- ✅ **EXTRACT**: AST-based pattern matching for AI Act and GDPR signal buckets.
+- ✅ **TRIAGE**: Flags potential Article 5 triggers, High-Risk Annex III systems, and Data Protection rules.
+- ❌ **IGNORE**: Business logic, passwords, API keys.
+- ❌ **OFFLINE**: No network requests. 
 
-It’s like giving a blood test to a laboratory: we see the metrics, we never see the patient.
+## ⚖️ What it detects
 
----
+The scanner looks for early signals related to:
 
-## 🛑 Addressing the "Linter" Objection
+**Potential Article 5 Prohibited Practices (BLOCKER_REVIEW):**
+- Remote Biometric Identification (RBI)
+- Biometric Emotion Recognition
+- Biometric Categorization (Race, Political, Sexual Orientation)
+- Predictive Policing
+- Social Scoring
+- Subliminal Manipulation
 
-You might ask: *"Isn't this just a very basic AST parser? SonarQube does this."*
+**Potential High-Risk Systems (HIGH_RISK_REVIEW):**
+- Critical Infrastructure (Digital and Physical)
+- Education Admission and Proctoring
+- Workplace Management and Automated Rejection
+- Credit Scoring
+- Democratic Processes
 
-Yes, this extractor is intentionally simple. It is **not** a linter. Linters are excellent for finding bad code, bugs, and style violations. 
+**Transparency & Data Protection (TRANSPARENCY_REVIEW & DATA_PROTECTION_REVIEW):**
+- Synthetic Media / Deepfakes without watermarking
+- GDPR: Processing of Personal Data, Profiling, Automated Decision-Making
 
-**TRACE is designed to audit architecture, not code syntax.** 
+## ⚠️ Disclaimer
 
-The value of the TRACE audit is not in this extraction script. This script is simply a secure data collector. The actual analysis happens during the TRACE diagnostic process, where we take this structural JSON and map it against your organizational narrative and documentation. 
+This tool does **not** provide legal advice and does **not** certify compliance with Regulation (EU) 2024/1689, GDPR, or any other legal framework.
 
-We look for structural bottlenecks:
-1. **God Nodes:** Classes or functions that have become too central, creating maintenance risks.
-2. **Community Fractures:** Isolated code clusters that indicate silos in your development team or unused legacy systems.
+It identifies technical risk signals that may require legal, technical, and operational review. Final classification depends on intended purpose, deployment context, affected persons, operator role, data processing, safeguards, and applicable national/EU law.
 
-This open-source tool exists exclusively to guarantee IP security, allowing us to audit your structural topology without ever asking for access to your proprietary source code.
+## 🔬 Scientific Foundation & Methodology
 
-## 🎯 Who is this for?
+This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper:
 
-- **Venture Capital (VC):** Technical Due Diligence in 48h before investing, without NDAs holding up access to code.
-- **CTOs:** Get a map of technical debt on day 1 of inheriting a new codebase.
-- **M&A (Mergers & Acquisitions):** Are the two codebases structurally compatible, or are you buying an unmaintainable bifurcation?
-- **Founders:** Does your narrative and your product architecture tell the same story?
-
----
-
-## 🛣️ Technical Roadmap
-Currently, `trace_extractor.py` relies on the standard `ast` library for Python and regex heuristics for JS/TS. 
-In future iterations, we will migrate to **Tree-sitter** to provide robust, language-agnostic AST parsing for Go, Rust, Java, and C++.
-
----
+📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture (Zenodo)](https://zenodo.org/records/20284633)**
 
 ## ⚙️ How to use it
 
-1. **Download the script directly:**
+1. **Navigate to this directory:**
    ```bash
-   curl -O https://raw.githubusercontent.com/joinsnipe/SPE_TRACE./main/trace_extractor.py
+   cd ai_act_compliance_auditor
    ```
 
 2. **Run it against your project folder** (requires Python 3.8+):
    ```bash
-   python trace_extractor.py /path/to/your/project
+   python trace_ai_act_risk_scanner.py /path/to/your/codebase
    ```
 
-3. **Verify the output (Optional but encouraged):**
-   The script generates a file called `trace_topology_export.json`. Open it with any text editor to verify that absolutely no sensitive code or logic was captured.
+3. **Export the Triage Report:**
+   ```bash
+   python trace_ai_act_risk_scanner.py /path/to/your/codebase --json > ai_act_report.json
+   ```
 
-4. **Send it to TRACE:**
-   Send the `trace_topology_export.json` file to your TRACE Structural Auditor to generate your architectural health report.
+4. **Analyze the Results:**
+   Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your legal/compliance team to evaluate the structural risks detected before releasing your product.
 
 ---
 *Maintained by TRACE™ - Forensic Intelligence & Structural Diagnostics.*
