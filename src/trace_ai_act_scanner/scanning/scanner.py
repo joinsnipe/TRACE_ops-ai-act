@@ -206,7 +206,7 @@ def scan(
         "status": "SIGNALS_DETECTED" if all_signals else "NO_AI_ACT_SIGNALS_DETECTED",
         "message": (
             "AI Act obligations may apply based on severity." if all_signals 
-            else "This scan did not detect any signals that typically trigger AI Act obligations. However, a clean scan does not guarantee legal exemption. Review the system's actual use case with legal counsel."
+            else "This system may still be subject to the AI Act depending on its actual use case. The scanner only analyzes code, not business context."
         )
     }
     

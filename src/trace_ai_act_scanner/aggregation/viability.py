@@ -25,4 +25,4 @@ def classify_viability(
         return "CONDITIONALLY_VIABLE_WITH_HIGH_RISK_CONTROLS"
     if risk_score >= 35:
         return "MODERATE_RISK_REVIEW_REQUIRED"
-    return "LOW_SIGNAL_NOT_A_COMPLIANCE_VERDICT"
+    return "NO_ACTION_REQUIRED_BY_SCANNER"
