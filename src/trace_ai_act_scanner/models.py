@@ -98,3 +98,4 @@ class ScanReport:
     controls: Dict[str, List[Dict[str, Any]]]
     config: Dict[str, Any]
     disclaimer: str
+    silenced_signals: List[Dict[str, Any]] = field(default_factory=list)

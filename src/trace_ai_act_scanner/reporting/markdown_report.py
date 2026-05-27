@@ -25,6 +25,7 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Risk score:** {s.risk_score}/100",
         f"**Coverage confidence:** {s.coverage_confidence}",
         f"**Governance readiness:** {s.readiness_score}/100",
+        "> *Note: Based on statically detectable controls. Does not evaluate organizational or documentary controls.*",
         f"**Viability:** `{s.viability}`",
         "",
         "## Signal summary",
@@ -93,6 +94,17 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
     lines += ["## Notes", ""]
     for note in s.notes:
         lines.append(f"- {note}")
+        
+    if report.silenced_signals:
+        lines += ["", "## Silenced Signals (Audit Trail)", ""]
+        for sil in report.silenced_signals:
+            rule_id = sil.get("rule_id", "Unknown")
+            file_loc = sil.get("file", "Unknown")
+            line = sil.get("line", "?")
+            reason = sil.get("reason", "No reason provided")
+            lines.append(f"- **{rule_id}** at `{file_loc}:{line}`")
+            lines.append(f"  - *Reason:* {reason}")
+            
     lines += ["", f"> {report.disclaimer}", ""]
 
     return "\n".join(lines)

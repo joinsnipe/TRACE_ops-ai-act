@@ -147,9 +147,10 @@ def scan(
     # Apply .traceignore filtering
     ignores = load_ignores(target_path)
     initial_signals_count = len(all_signals)
+    silenced_signals = []
     if ignores:
-        all_signals = filter_signals(all_signals, ignores)
-    ignored_count = initial_signals_count - len(all_signals)
+        all_signals, silenced_signals = filter_signals(all_signals, ignores)
+    ignored_count = len(silenced_signals)
 
     risk_score, coverage_confidence = compute_risk_score(all_signals, config)
     readiness_score, missing_controls = compute_readiness(
@@ -226,4 +227,5 @@ def scan(
         controls=controls,
         config=config,
         disclaimer=DISCLAIMER,
+        silenced_signals=silenced_signals,
     )

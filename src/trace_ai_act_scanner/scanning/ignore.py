@@ -3,7 +3,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List, Tuple
 
 from trace_ai_act_scanner.models import Signal
 
@@ -29,14 +29,16 @@ def load_ignores(target_root: Path) -> List[Dict]:
         log.warning("Failed to parse .traceignore: %s", exc)
         return []
 
-def filter_signals(signals: List[Signal], ignores: List[Dict]) -> List[Signal]:
-    """Return signals that do NOT match any ignore rules."""
+def filter_signals(signals: List[Signal], ignores: List[Dict]) -> Tuple[List[Signal], List[Dict[str, Any]]]:
+    """Return (active_signals, silenced_signals_details)."""
     if not ignores:
-        return signals
+        return signals, []
         
     filtered = []
+    silenced = []
     for sig in signals:
         should_ignore = False
+        ignore_reason = ""
         for rule in ignores:
             match_rule_id = rule.get("rule_id") == sig.rule_id if "rule_id" in rule else True
             match_file = str(rule.get("file")) in sig.file if "file" in rule else True
@@ -45,9 +47,17 @@ def filter_signals(signals: List[Signal], ignores: List[Dict]) -> List[Signal]:
             # A rule must specify at least something to match, and all specified conditions must be true
             if match_rule_id and match_file and match_line and any(k in rule for k in ("rule_id", "file", "line")):
                 should_ignore = True
+                ignore_reason = rule.get("reason", "No reason provided in .traceignore")
                 break
                 
         if not should_ignore:
             filtered.append(sig)
+        else:
+            silenced.append({
+                "rule_id": sig.rule_id,
+                "file": sig.file,
+                "line": sig.line,
+                "reason": ignore_reason
+            })
             
-    return filtered
+    return filtered, silenced

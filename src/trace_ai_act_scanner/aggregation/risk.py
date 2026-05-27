@@ -22,7 +22,7 @@ def compute_risk_score(signals: Sequence[Signal], config: Dict[str, Any]) -> Tup
     for additional signals, rather than a raw unbounded sum.
     """
     if not signals:
-        return 0, 0.0
+        return 0, 1.0
 
     coverage_confidence = sum(s.confidence for s in signals) / len(signals)
     

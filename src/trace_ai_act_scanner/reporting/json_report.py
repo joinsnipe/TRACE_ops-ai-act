@@ -24,4 +24,5 @@ def report_to_dict(report: ScanReport) -> Dict[str, Any]:
         "controls": report.controls,
         "config": report.config,
         "disclaimer": report.disclaimer,
+        "silenced_signals": report.silenced_signals,
     }
