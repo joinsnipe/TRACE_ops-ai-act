@@ -74,8 +74,8 @@ It provides a lightweight technical triage layer for early signal detection in s
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/joinsnipe/TRACE_ops_-ai-act.git
-   cd TRACE_ops_-ai-act
+   git clone https://github.com/joinsnipe/TRACE_ops-ai-act.git
+   cd TRACE_ops-ai-act
    ```
 
 2. **Run it against your project folder** (requires Python 3.8+):
