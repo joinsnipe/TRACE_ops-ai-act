@@ -1,0 +1,29 @@
+{
+  "company": {
+    "name": "Example Company",
+    "sector": "HR Tech",
+    "eu_market": true,
+    "operator_role": "provider"
+  },
+  "system": {
+    "name": "Candidate Ranking System",
+    "intended_purpose": "Ranking job candidates",
+    "affects_natural_persons": true,
+    "uses_personal_data": true,
+    "uses_biometric_data": false,
+    "automated_decision_making": true,
+    "human_oversight": true,
+    "generates_synthetic_content": false
+  },
+  "controls": {
+    "risk_management": false,
+    "data_governance": true,
+    "technical_documentation": false,
+    "logging": true,
+    "human_oversight": true,
+    "transparency_notice": false,
+    "post_market_monitoring": false,
+    "dpia": false,
+    "fria": false
+  }
+}

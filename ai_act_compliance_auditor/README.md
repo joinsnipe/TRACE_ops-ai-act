@@ -1,62 +1,64 @@
 <div align="center">
   <img src="../trace_logo.png" width="120" alt="TRACE Logo">
-  <h1>TRACE™ AI Act Compliance Auditor</h1>
-  <p><b>Zero-Trust codebase inspection for EU AI Act regulatory compliance.</b></p>
-  <p><i>Audit your technical architecture against European law without exposing your source code.</i></p>
+  <h1>TRACE™ AI Act Risk Scanner</h1>
+  <p><b>Open-source technical scanner for early EU AI Act and GDPR risk signals.</b></p>
+  <p><i>A first-pass technical triage layer to analyze your architecture without exposing source code.</i></p>
 </div>
 
 ---
 
 ## 🏛️ What is this?
 
-The **EU Artificial Intelligence Act** imposes severe restrictions and bans on specific AI practices (e.g., biometric categorization, predictive policing, subliminal manipulation). Fines for non-compliance can reach up to **7% of global annual turnover**.
+TRACE AI Act Risk Scanner analyzes source code and lightweight configuration files to detect technical signals that may require review under **Regulation (EU) 2024/1689 (the EU Artificial Intelligence Act)** and the **GDPR**.
 
-Most legal audits rely on documentation and interviews. **TRACE™ AI Act Compliance Auditor** relies on mathematics. 
+It is designed strictly as an **early-warning technical triage layer**, not as a legal opinion.
 
-This open-source extraction script uses Abstract Syntax Tree (AST) parsing to statically analyze your codebase. It mathematically maps variables, function calls, and structural dependencies against **15 specific legal vectors** derived directly from the EU AI Act (Article 5 prohibited practices and Annex III high-risk systems).
+## 🛡️ The Zero-Trust Guarantee
+
+In regulatory audits, handing over your proprietary source code is a massive security risk. 
+That's why **we don't need it.**
+
+This script runs **LOCALLY** on your servers. It uses Abstract Syntax Tree (AST) parsing to detect structural patterns (like `detect_mood`, `score_candidate_auto`, or `personal_data`) and generates a clean technical report.
+
+- ✅ **EXTRACT**: AST-based pattern matching for AI Act and GDPR signal buckets.
+- ✅ **TRIAGE**: Flags potential Article 5 triggers, High-Risk Annex III systems, and Data Protection rules.
+- ❌ **IGNORE**: Business logic, passwords, API keys.
+- ❌ **OFFLINE**: No network requests. 
+
+## ⚖️ What it detects
+
+The scanner looks for early signals related to:
+
+**Potential Article 5 Prohibited Practices (BLOCKER_REVIEW):**
+- Remote Biometric Identification (RBI)
+- Biometric Emotion Recognition
+- Biometric Categorization (Race, Political, Sexual Orientation)
+- Predictive Policing
+- Social Scoring
+- Subliminal Manipulation
+
+**Potential High-Risk Systems (HIGH_RISK_REVIEW):**
+- Critical Infrastructure (Digital and Physical)
+- Education Admission and Proctoring
+- Workplace Management and Automated Rejection
+- Credit Scoring
+- Democratic Processes
+
+**Transparency & Data Protection (TRANSPARENCY_REVIEW & DATA_PROTECTION_REVIEW):**
+- Synthetic Media / Deepfakes without watermarking
+- GDPR: Processing of Personal Data, Profiling, Automated Decision-Making
+
+## ⚠️ Disclaimer
+
+This tool does **not** provide legal advice and does **not** certify compliance with Regulation (EU) 2024/1689, GDPR, or any other legal framework.
+
+It identifies technical risk signals that may require legal, technical, and operational review. Final classification depends on intended purpose, deployment context, affected persons, operator role, data processing, safeguards, and applicable national/EU law.
 
 ## 🔬 Scientific Foundation & Methodology
 
 This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper:
 
 📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture (Zenodo)](https://zenodo.org/records/20284633)**
-
-## 🛡️ The Zero-Trust Guarantee: "We don't want your code"
-
-In regulatory audits, handing over your proprietary source code to consultants or lawyers is a massive security risk. 
-That's why **we don't need it.**
-
-This script is designed to run **LOCALLY** on your isolated servers. It parses your code mathematically to detect structural patterns (like `detect_mood`, `score_candidate_auto`, or `predictive_policing_score`) and generates a clean JSON report.
-
-- ✅ **EXTRACT**: AST-based pattern matching for the 15 critical vectors of the AI Act.
-- ✅ **DETECT**: Prohibited Practices (Critical Risk) and High-Risk Systems.
-- ❌ **IGNORE**: Business logic, passwords, API keys, and database schemas.
-- ❌ **OFFLINE**: The script does not make any network requests. It saves a `.json` file locally.
-
-## ⚖️ The 15 Vectors Audited
-
-The script scans for structural evidence of the following regulatory categories:
-
-**Prohibited Practices (Article 5) - CRITICAL RISK:**
-1. Real-time Remote Biometric Identification (RBI)
-2. Biometric Emotion Recognition in Workplace/Education
-3. Biometric Categorization (Race, Political, Sexual Orientation)
-4. Predictive Policing and Criminal Profiling
-5. Social Scoring and Citizen Trust
-6. Subliminal Manipulation and Dark Patterns
-
-**High-Risk Systems (Annex III) - HIGH RISK:**
-7. Critical Digital Infrastructure (SCADA, DNS routing)
-8. Critical Physical Infrastructure (Water, Gas, Electricity)
-9. Educational Admission and Learning Scoring
-10. Educational Proctoring and Monitoring
-11. Workplace Automated Rejection (CV Filtering)
-12. Workplace Management and Task Allocation
-13. Credit Scoring and Loan Approval
-14. Democratic Process and Election Influence
-
-**Transparency Risk (Article 50):**
-15. Generative AI Synthetic Media (Deepfakes) without Watermarking
 
 ## ⚙️ How to use it
 
@@ -67,16 +69,16 @@ The script scans for structural evidence of the following regulatory categories:
 
 2. **Run it against your project folder** (requires Python 3.8+):
    ```bash
-   python trace_ai_act_extractor.py /path/to/your/codebase
+   python trace_ai_act_risk_scanner.py /path/to/your/codebase
    ```
 
-3. **Export the Official JSON Report:**
+3. **Export the Triage Report:**
    ```bash
-   python trace_ai_act_extractor.py /path/to/your/codebase --json > ai_act_report.json
+   python trace_ai_act_risk_scanner.py /path/to/your/codebase --json > ai_act_report.json
    ```
 
 4. **Analyze the Results:**
-   Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your compliance team to evaluate the structural risks detected.
+   Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your legal/compliance team to evaluate the structural risks detected before releasing your product.
 
 ---
 *Maintained by TRACE™ - Forensic Intelligence & Structural Diagnostics.*
