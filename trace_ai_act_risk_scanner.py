@@ -57,6 +57,7 @@ class Rule:
     phrases: Tuple[str, ...] = ()
     regexes: Tuple[str, ...] = ()
     context_terms: Tuple[str, ...] = ()
+    required_context: Tuple[str, ...] = ()
     negative_terms: Tuple[str, ...] = ()
     guidance: str = ""
 
@@ -115,7 +116,7 @@ RISK_RULES: List[Rule] = [
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5",
         label="Potential manipulative, subliminal or exploitative practice",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=35,
         exact_terms=("subliminal", "manipulate", "manipulation", "exploit", "exploitative", "vulnerability"),
         phrases=("dark pattern", "cognitive distortion", "materially distort", "behaviour manipulation", "behavior manipulation"),
@@ -127,7 +128,7 @@ RISK_RULES: List[Rule] = [
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5",
         label="Potential social scoring of natural persons",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=40,
         exact_terms=("social_score", "socialscore", "citizen_score", "citizen_trust", "trust_score", "reputation_score"),
         phrases=("social credit", "citizen trust", "behaviour score", "behavior score"),
@@ -139,20 +140,21 @@ RISK_RULES: List[Rule] = [
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5 + GDPR special categories",
         label="Potential biometric categorisation to infer sensitive attributes",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=40,
-        exact_terms=("biometric", "face", "fingerprint", "iris", "gait", "voiceprint", "race", "ethnicity", "religion", "political", "sexual_orientation", "trade_union"),
+        exact_terms=("race", "ethnicity", "religion", "political", "sexual_orientation", "trade_union"),
         phrases=("biometric categorisation", "biometric categorization", "infer race", "infer ethnicity", "political opinion", "trade union", "sexual orientation"),
         context_terms=("classify", "categorize", "categorise", "infer", "deduce", "attribute", "sensitive"),
+        required_context=("biometric", "face", "fingerprint", "iris", "gait", "voiceprint", "facial"),
         negative_terms=("hair_colour", "hair_color", "eye_colour", "eye_color", "product_filter", "avatar_filter"),
-        guidance="Check if biometric data is used to infer protected or sensitive attributes. Avoid substring matches; require biometric + sensitive context.",
+        guidance="Check if biometric data is used to infer protected or sensitive attributes. Requires biometric + sensitive context.",
     ),
     Rule(
         id="A5_REAL_TIME_REMOTE_BIOMETRIC_ID",
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5",
         label="Potential real-time remote biometric identification in public spaces",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=45,
         exact_terms=("face_recognition", "facial_recognition", "remote_biometric", "biometric_id", "cctv", "live_camera", "surveillance"),
         phrases=("real time biometric", "real-time biometric", "remote biometric identification", "public space", "publicly accessible"),
@@ -164,7 +166,7 @@ RISK_RULES: List[Rule] = [
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5",
         label="Potential individual predictive policing / criminal risk assessment",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=40,
         exact_terms=("predict_crime", "crime_prediction", "recidivism", "offender_score", "criminal_risk", "offense_probability", "offence_probability"),
         phrases=("predictive policing", "risk of committing", "criminal offence", "criminal offense"),
@@ -176,7 +178,7 @@ RISK_RULES: List[Rule] = [
         bucket="article_5_prohibited_practice_signal",
         legal_basis="EU AI Act Article 5 / Annex III where not prohibited",
         label="Potential emotion recognition in workplace or education",
-        severity="BLOCKER_REVIEW",
+        severity="ARTICLE_5_REVIEW_REQUIRED",
         weight=35,
         exact_terms=("emotion", "mood", "affect", "stress", "sentiment_facial", "deepface", "fer", "voice_stress"),
         phrases=("emotion recognition", "infer emotion", "detect mood", "facial sentiment", "voice stress"),
@@ -382,6 +384,10 @@ def match_rule(rule: Rule, symbol: str, context: str) -> Optional[Tuple[str, flo
     tokens = set(split_identifier(symbol) + split_identifier(context))
     haystack = f"{symbol}\n{context}".lower()
 
+    if rule.required_context:
+        if not any(t.lower() in tokens or whole_word_phrase_match(t, haystack) for t in rule.required_context):
+            return None
+
     # Negative context can suppress very weak exact matches, but not strong phrase matches.
     negative_hit = any(t.lower() in tokens or whole_word_phrase_match(t, haystack) for t in rule.negative_terms)
 
@@ -535,7 +541,21 @@ def file_hash(source: str) -> str:
     return hashlib.sha256(source.encode("utf-8", errors="ignore")).hexdigest()[:16]
 
 
-def scan_file(path: Path, target_root: Path, rules: Sequence[Rule]) -> Tuple[List[Signal], Dict[str, List[Dict[str, Any]]]]:
+def redact_secrets(text: str) -> str:
+    if not text:
+        return text
+    patterns = [
+        r"(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][^'\"]+['\"]",
+        r"sk-[A-Za-z0-9_\-]{20,}",
+        r"AKIA[0-9A-Z]{16}",
+    ]
+    redacted = text
+    for pattern in patterns:
+        redacted = re.sub(pattern, "[REDACTED_SECRET]", redacted)
+    return redacted
+
+
+def scan_file(path: Path, target_root: Path, rules: Sequence[Rule], no_snippets: bool = False) -> Tuple[List[Signal], Dict[str, List[Dict[str, Any]]]]:
     try:
         source = path.read_text(encoding="utf-8", errors="ignore")
     except OSError:
@@ -560,13 +580,21 @@ def scan_file(path: Path, target_root: Path, rules: Sequence[Rule]) -> Tuple[Lis
             seen.add(dedupe_key)
 
             evidence = line_context(source, line, radius=1) or context
+            if no_snippets:
+                evidence = f"[SNIPPET OMITTED: {file_hash(evidence)}]"
+            else:
+                evidence = redact_secrets(evidence)
+
+            symbol_redacted = redact_secrets(symbol[:200])
+            matched_redacted = redact_secrets(matched_text)
+
             if rule.bucket == "governance_control":
                 controls.setdefault(rule.id, []).append({
                     "file": rel,
                     "line": line,
-                    "matched": matched_text,
+                    "matched": matched_redacted,
                     "node_type": node_type,
-                    "evidence": evidence[:500],
+                    "evidence": evidence[:500] if not no_snippets else evidence,
                 })
             else:
                 signals.append(Signal(
@@ -578,9 +606,9 @@ def scan_file(path: Path, target_root: Path, rules: Sequence[Rule]) -> Tuple[Lis
                     weight=rule.weight,
                     file=rel,
                     line=line,
-                    symbol=symbol[:200],
-                    matched=matched_text,
-                    evidence=evidence[:700],
+                    symbol=symbol_redacted,
+                    matched=matched_redacted,
+                    evidence=evidence[:700] if not no_snippets else evidence,
                     confidence=conf,
                     node_type=node_type,
                     guidance=rule.guidance,
@@ -603,7 +631,7 @@ def classify_viability(risk_score: int, blockers: int, high_risk: int, missing_c
     if blockers > 0 and risk_score >= 70:
         return "BLOCKED_UNTIL_LEGAL_AND_TECHNICAL_REVIEW"
     if blockers > 0:
-        return "ARTICLE_5_BLOCKER_REVIEW_REQUIRED"
+        return "ARTICLE_5_REVIEW_REQUIRED"
     if high_risk > 0 and missing_controls >= 4:
         return "HIGH_RISK_WITH_INSUFFICIENT_EVIDENCE"
     if high_risk > 0:
@@ -613,7 +641,7 @@ def classify_viability(risk_score: int, blockers: int, high_risk: int, missing_c
     return "LOW_SIGNAL_NOT_A_COMPLIANCE_VERDICT"
 
 
-def compute_report(target: str, config: Dict[str, Any]) -> ScanReport:
+def compute_report(target: str, config: Dict[str, Any], no_snippets: bool = False) -> ScanReport:
     target_path = Path(target).resolve()
     all_signals: List[Signal] = []
     controls: Dict[str, List[Dict[str, Any]]] = {}
@@ -623,7 +651,7 @@ def compute_report(target: str, config: Dict[str, Any]) -> ScanReport:
 
     for path in iter_files(target_path, excludes):
         files_scanned += 1
-        file_signals, file_controls = scan_file(path, target_path if target_path.is_dir() else path.parent, RISK_RULES + CONTROL_RULES)
+        file_signals, file_controls = scan_file(path, target_path if target_path.is_dir() else path.parent, RISK_RULES + CONTROL_RULES, no_snippets)
         all_signals.extend(file_signals)
         for cid, hits in file_controls.items():
             controls.setdefault(cid, []).extend(hits)
@@ -773,13 +801,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--json", action="store_true", help="Print JSON report")
     parser.add_argument("--markdown", help="Write Markdown report to path")
     parser.add_argument("--max-signals", type=int, default=30, help="Max signals in Markdown report")
+    parser.add_argument("--no-snippets", action="store_true", help="Omit code snippets from the report to protect IP")
+    parser.add_argument("--fail-on", choices=["none", "article5", "high", "any"], default="none", help="Fail pipeline if risk thresholds are met")
     args = parser.parse_args(argv)
 
     if not os.path.exists(args.target):
         raise SystemExit(f"Target does not exist: {args.target}")
 
     config = load_config(args.config)
-    report = compute_report(args.target, config)
+    report = compute_report(args.target, config, args.no_snippets)
 
     if args.markdown:
         Path(args.markdown).write_text(render_markdown(report, args.max_signals), encoding="utf-8")
@@ -788,6 +818,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(json.dumps(report_to_dict(report), ensure_ascii=False, indent=2))
     else:
         print(render_markdown(report, args.max_signals))
+
+    if args.fail_on != "none":
+        if args.fail_on == "any" and report.summary.signals_total > 0:
+            return 1
+        if args.fail_on in ["high", "article5"] and report.summary.blockers > 0:
+            return 1
+        if args.fail_on == "high" and report.summary.potential_high_risk > 0:
+            return 1
 
     return 0
 

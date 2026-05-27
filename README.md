@@ -7,6 +7,10 @@
 
 ---
 
+> **Disclaimer**: This tool does not provide legal advice and does not certify compliance with Regulation (EU) 2024/1689, GDPR or any other legal framework. It identifies technical risk signals that may require legal, technical and operational review. Final classification depends on intended purpose, deployment context, affected persons, operator role, data processing, safeguards and applicable national/EU law. Generated reports may contain filenames, symbols or code snippets. Review and redact reports before sharing them externally.
+
+---
+
 ## 🏛️ What is this?
 
 TRACE AI Act Risk Scanner analyzes source code and lightweight configuration files to detect technical signals that may require review under **Regulation (EU) 2024/1689 (the EU Artificial Intelligence Act)** and the **GDPR**.
@@ -20,16 +24,16 @@ That's why **we don't need it.**
 
 This script runs **LOCALLY** on your servers. It uses Abstract Syntax Tree (AST) parsing to detect structural patterns (like `detect_mood`, `score_candidate_auto`, or `personal_data`) and generates a clean technical report.
 
-- ✅ **EXTRACT**: AST-based pattern matching for AI Act and GDPR signal buckets.
-- ✅ **TRIAGE**: Flags potential Article 5 triggers, High-Risk Annex III systems, and Data Protection rules.
-- ❌ **IGNORE**: Business logic, passwords, API keys.
-- ❌ **OFFLINE**: No network requests. 
+- ✅ **LOCAL**: runs on your machine or CI environment.
+- ✅ **NO NETWORK**: does not send source code to external services.
+- ✅ **REDACTED OUTPUT**: designed to avoid exposing secrets in reports.
+- ⚠️ **REVIEW REPORTS**: generated reports may contain filenames, symbols or snippets; review before sharing externally.
 
 ## ⚖️ What it detects
 
 The scanner looks for early signals related to:
 
-**Potential Article 5 Prohibited Practices (BLOCKER_REVIEW):**
+**Potential Article 5 Prohibited Practices (ARTICLE_5_REVIEW_REQUIRED):**
 - Remote Biometric Identification (RBI)
 - Biometric Emotion Recognition
 - Biometric Categorization (Race, Political, Sexual Orientation)
@@ -56,15 +60,22 @@ It identifies technical risk signals that may require legal, technical, and oper
 
 ## 🔬 Scientific Foundation & Methodology
 
-This open-source tool is the technical implementation of our peer-reviewed research on legislative topology. For a deep-dive into the mathematical and forensic logic underpinning this extractor, read our published scientific paper:
+This open-source scanner builds on the public research baseline introduced in:
 
-📄 **[Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture (Zenodo)](https://zenodo.org/records/20284633)**
+**Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture**  
+Zenodo: https://zenodo.org/records/20284633
+
+The paper analyzes the EU AI Act as a structured regulatory architecture, including cross-reference topology, regulatory density, obligation-rights asymmetry and enforcement concentration.
+
+This scanner does not implement the proprietary TRACE Structural Audit Engine.  
+It provides a lightweight technical triage layer for early signal detection in software systems.
 
 ## ⚙️ How to use it
 
-1. **Navigate to this directory:**
+1. **Clone the repository:**
    ```bash
-   cd ai_act_compliance_auditor
+   git clone https://github.com/joinsnipe/TRACE_ops_-ai-act.git
+   cd TRACE_ops_-ai-act
    ```
 
 2. **Run it against your project folder** (requires Python 3.8+):
