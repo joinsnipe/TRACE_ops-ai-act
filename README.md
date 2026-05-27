@@ -1,105 +1,156 @@
-<div align="center">
-  <img src="../trace_logo.png" width="120" alt="TRACE Logo">
-  <h1>TRACE™ AI Act Risk Scanner</h1>
-  <p><b>Open-source technical scanner for early EU AI Act and GDPR risk signals.</b></p>
-  <p><i>A first-pass technical triage layer to analyze your architecture without exposing source code.</i></p>
-</div>
+<p align="center">
+  <img src="trace_logo.png" alt="TRACE Intelligence" width="280" />
+</p>
+
+# TRACE AI Act Risk Scanner
+
+[![CI](https://github.com/joinsnipe/TRACE_ops-ai-act/actions/workflows/ci.yml/badge.svg)](https://github.com/joinsnipe/TRACE_ops-ai-act/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](pyproject.toml)
+[![Schema](https://img.shields.io/badge/schema-v1.0-green)](schema/trace-report-v1.json)
+
+> **Open-source technical scanner for early EU AI Act and GDPR risk signals.**
+> Runs **locally**, on your machine, in your CI. We never see your code.
 
 ---
 
-> **Disclaimer**: This tool does not provide legal advice and does not certify compliance with Regulation (EU) 2024/1689, GDPR or any other legal framework. It identifies technical risk signals that may require legal, technical and operational review. Final classification depends on intended purpose, deployment context, affected persons, operator role, data processing, safeguards and applicable national/EU law. Generated reports may contain filenames, symbols or code snippets. Review and redact reports before sharing them externally.
+## What it does
+
+`trace-ai-act-scan` walks a codebase and surfaces *signals* — names, identifiers, phrases, configuration patterns — that **may indicate** alignment with:
+
+- **EU AI Act Article 5** — prohibited practices (manipulation, social scoring, real-time remote biometric ID, predictive policing, emotion recognition at work/school, biometric categorisation of sensitive traits).
+- **EU AI Act Annex III** — high-risk systems (employment, education, credit, critical infrastructure, law enforcement, migration, justice, democratic processes).
+- **EU AI Act Article 50** — synthetic content / deepfake transparency obligations.
+- **GDPR** — overlap with personal data processing and profiling.
+- **Governance controls** — evidence of risk management, data governance, documentation, logging, transparency, human oversight, robustness, post-market monitoring, and FRIA/DPIA.
+
+The output is a **structured JSON report** (schema v1, see [`schema/`](schema/)), a human-readable Markdown report, and optionally SARIF for GitHub Code Scanning.
+
+> ⚠️ **This is not legal advice and not a compliance certification.** It is technical triage. Read [`docs/legal/DISCLAIMER.md`](docs/legal/DISCLAIMER.md).
 
 ---
 
-## 🏛️ What is this?
+## Install
 
-TRACE AI Act Risk Scanner analyzes source code and lightweight configuration files to detect technical signals that may require review under **Regulation (EU) 2024/1689 (the EU Artificial Intelligence Act)** and the **GDPR**.
+```bash
+pip install trace-ai-act-risk-scanner
+```
 
-It is designed strictly as an **early-warning technical triage layer**, not as a legal opinion.
+Or from source:
 
-## 🛡️ The Zero-Trust Guarantee
+```bash
+git clone https://github.com/joinsnipe/TRACE_ops-ai-act.git
+cd TRACE_ops-ai-act
+pip install -e ".[dev]"
+```
 
-In regulatory audits, handing over your proprietary source code is a massive security risk. 
-That's why **we don't need it.**
+## Use
 
-This script runs **LOCALLY** on your servers. It uses Abstract Syntax Tree (AST) parsing to detect structural patterns (like `detect_mood`, `score_candidate_auto`, or `personal_data`) and generates a clean technical report.
+```bash
+# Quick scan, Markdown output to stdout
+trace-ai-act-scan ./my-project
 
-- ✅ **LOCAL**: runs on your machine or CI environment.
-- ✅ **NO NETWORK**: does not send source code to external services.
-- ✅ **REDACTED OUTPUT**: designed to avoid exposing secrets in reports.
-- ⚠️ **REVIEW REPORTS**: generated reports may contain filenames, symbols or snippets; review before sharing externally.
+# Structured JSON (schema v1, suitable for downstream tools)
+trace-ai-act-scan ./my-project --json > report.json
 
-## ⚖️ What it detects
+# Strip code snippets to protect IP — report contains only hashes
+trace-ai-act-scan ./my-project --json --no-snippets > report.json
 
-The scanner looks for early signals related to:
+# Emit SARIF for GitHub Code Scanning
+trace-ai-act-scan ./my-project --sarif report.sarif
 
-**Potential Article 5 Prohibited Practices (ARTICLE_5_REVIEW_REQUIRED):**
-- Remote Biometric Identification (RBI)
-- Biometric Emotion Recognition
-- Biometric Categorization (Race, Political, Sexual Orientation)
-- Predictive Policing
-- Social Scoring
-- Subliminal Manipulation
+# Fail CI when Article 5 signals appear
+trace-ai-act-scan ./my-project --fail-on article5
+```
 
-**Potential High-Risk Systems (HIGH_RISK_REVIEW):**
-- Critical Infrastructure (Digital and Physical)
-- Education Admission and Proctoring
-- Workplace Management and Automated Rejection
-- Credit Scoring
-- Democratic Processes
+Or programmatically:
 
-**Transparency & Data Protection (TRANSPARENCY_REVIEW & DATA_PROTECTION_REVIEW):**
-- Synthetic Media / Deepfakes without watermarking
-- GDPR: Processing of Personal Data, Profiling, Automated Decision-Making
+```python
+from trace_ai_act_scanner import scan
+from trace_ai_act_scanner.reporting import report_to_dict
 
-## ⚠️ Disclaimer
+report = scan("./my-project", config={"intended_purpose": "recruitment"})
+print(report.summary.viability)        # e.g. "CONDITIONALLY_VIABLE_WITH_HIGH_RISK_CONTROLS"
+print(report.summary.risk_score)       # 0..100
+payload = report_to_dict(report)       # schema v1 JSON-serialisable dict
+```
 
-This tool does **not** provide legal advice and does **not** certify compliance with Regulation (EU) 2024/1689, GDPR, or any other legal framework.
+## Output schema
 
-It identifies technical risk signals that may require legal, technical, and operational review. Final classification depends on intended purpose, deployment context, affected persons, operator role, data processing, safeguards, and applicable national/EU law.
+Every report carries a `schema_version` field. See [`schema/trace-report-v1.json`](schema/trace-report-v1.json) for the formal contract and [`schema/README.md`](schema/README.md) for the versioning policy.
 
-## 🔬 Scientific Foundation & Methodology
-
-This open-source scanner builds on the public research baseline introduced in:
-
-**Structural Asymmetries in the EU AI Act: A Computational Forensic Analysis of Legislative Architecture**  
-Zenodo: https://zenodo.org/records/20284633
-
-The paper analyzes the EU AI Act as a structured regulatory architecture, including cross-reference topology, regulatory density, obligation-rights asymmetry and enforcement concentration.
-
-This scanner does not implement the proprietary TRACE Structural Audit Engine.  
-It provides a lightweight technical triage layer for early signal detection in software systems.
-
-## ⚙️ How to use it
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/joinsnipe/TRACE_ops-ai-act.git
-   cd TRACE_ops-ai-act
-   ```
-
-2. **Run it against your project folder** (requires Python 3.8+):
-   ```bash
-   python trace_ai_act_risk_scanner.py /path/to/your/codebase
-   ```
-
-3. **Export the Triage Report:**
-   ```bash
-   python trace_ai_act_risk_scanner.py /path/to/your/codebase --json > ai_act_report.json
-   ```
-
-4. **Analyze the Results:**
-   Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your legal/compliance team to evaluate the structural risks detected before releasing your product.
-
-## 🏢 Enterprise Structural Audit
-
-This free scanner covers regulatory signal detection. For organizations that need a **deeper architectural analysis**, TRACE offers a professional Structural Audit service:
-
-- **Codebase topology mapping** — God Nodes, community fractures, cohesion scoring
-- **Narrative-architecture alignment** — does your pitch match your product?
-- **Zero-trust extraction** — your source code never leaves your servers
-
-→ See [`enterprise_structural_audit/`](enterprise_structural_audit/) for details and the extraction tool.
+Downstream tools should validate input against this schema before processing.
 
 ---
-*Maintained by TRACE™ — Forensic Intelligence & Structural Diagnostics.*
+
+## How it works (in 30 seconds)
+
+```
+your code  ─▶  extractors (AST + text)  ─▶  matcher  ─▶  rules (YAML)
+                                                            │
+                                                            ▼
+                                              risk + readiness + viability
+                                                            │
+                                                            ▼
+                                              JSON / Markdown / SARIF
+```
+
+- **Rules live in YAML** under [`src/trace_ai_act_scanner/rules/builtin/`](src/trace_ai_act_scanner/rules/builtin/). Add or override with `--rules-dir`.
+- **Confidence is a heuristic in [0.10, 0.95]**, intentionally coarse: it discriminates accidental hits from likely signals, not statistical certainty.
+- **Risk score** (0..100) = sum of `weight × confidence`, scaled by context multipliers from your `--config`.
+- **Readiness score** (0..100) = fraction of expected governance controls actually detected for the risk buckets you trigger.
+- **Viability** is a conservative label: any Article-5 hit dominates everything below it.
+
+See [`docs/architecture.md`](docs/architecture.md) and [`docs/methodology.md`](docs/methodology.md) for details.
+
+## What it does NOT do
+
+- It does not certify compliance with Regulation (EU) 2024/1689 or with GDPR.
+- It does not infer intent — a clean scan does not prove a system is compliant.
+- It does not analyse model weights, datasets or runtime behaviour.
+- It does not understand your public communication. (That requires the commercial alignment service.)
+
+---
+
+## Part of the TRACE Intelligence ecosystem
+
+This scanner is the **open-source triage layer** — the first step in a broader structural intelligence infrastructure built by [TRACE Intelligence](mailto:contacto@spetrace.com).
+
+### Consulting services
+
+| Service line | What it covers |
+|---|---|
+| **Structural Diagnosis** | Courtesy audit (free), single-piece structural audit, entity diagnosis. |
+| **Corporate Audit** | Full corpus audit, code audit, RAG corpus validation, forensic document audit. |
+| **Operational Intelligence** | Sector-wide cartography, ecosystem mapping, contagion simulation. |
+| **Institutional Operations** | Advanced services for organisations, institutions and high-demand environments. |
+
+### Software
+
+| Product | What it does | Access |
+|---|---|---|
+| **AI Act Risk Scanner** *(this repo)* | Technical signal detection in codebases. Runs locally, emits structured reports. | Open source · Apache-2.0 |
+| **BrandRank™** | Monitors how AI models (ChatGPT, Claude, Gemini, Perplexity) represent your organisation over time. Tracks mention rate, sentiment, competitive positioning and semantic drift. | 15-day free trial |
+
+### SIO™ — Structural Intelligence Optimization
+
+All consulting services operate under **SIO™**, our structural intelligence methodology. SIO™ audits and corrects the structure from which AI systems understand an organisation — measuring God Nodes, cohesion, fragmentation, semantic gaps and crisis resilience using graph topology and multi-LLM triangulation.
+
+The scanner tells you **what your code does**. Our consulting services tell you whether what your company *says publicly* is consistent with what your code *actually does* — and whether AI systems are structurally understanding your organisation as intended.
+
+> The open-source scanner is and will remain **fully functional on its own**, free under Apache-2.0. The premium services add qualified human analysis and proprietary structural intelligence — they are not gated behind missing features.
+
+📧 **[contacto@spetrace.com](mailto:contacto@spetrace.com)**
+
+---
+
+## Contributing
+
+We welcome contributions, especially on rules. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+Security issues → [`SECURITY.md`](SECURITY.md).
+
+## License
+
+Apache-2.0. See [`LICENSE`](LICENSE) and [`docs/legal/NOTICE.md`](docs/legal/NOTICE.md).
+

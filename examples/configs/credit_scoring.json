@@ -1,0 +1,9 @@
+{
+  "ai_system_name": "Acme CreditScore",
+  "version": "1.0.0",
+  "intended_purpose": "Automated creditworthiness assessment for consumer loans.",
+  "operator_role": "provider",
+  "target_market": ["EU"],
+  "deployment_context": "Embedded in partner banks' loan application flows.",
+  "exclude": ["node_modules", "vendor", "build"]
+}

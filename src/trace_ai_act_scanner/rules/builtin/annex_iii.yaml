@@ -1,0 +1,242 @@
+# EU AI Act — Annex III (High-Risk AI Systems)
+# https://artificialintelligenceact.eu/annex/3/
+
+- id: AIII_BIOMETRICS_HIGH_RISK
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(1)"
+  label: "Potential high-risk biometric system"
+  severity: HIGH_RISK_REVIEW
+  weight: 28
+  exact_terms:
+    - biometric
+    - facial_recognition
+    - face_recognition
+    - voiceprint
+    - gait
+    - iris
+    - fingerprint
+    - emotion_recognition
+  phrases:
+    - "remote biometric"
+    - "biometric verification"
+    - "biometric categorisation"
+    - "biometric categorization"
+  context_terms:
+    - identify
+    - verify
+    - authenticate
+    - classify
+    - categorize
+    - recognize
+  guidance: >
+    Biometric verification may be excluded from some high-risk categories
+    if used only for authentication; document purpose.
+  contradicts_public_claims:
+    - "no biometric data"
+    - "no facial recognition"
+
+- id: AIII_CRITICAL_INFRASTRUCTURE
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(2)"
+  label: "Potential AI safety component in critical infrastructure"
+  severity: HIGH_RISK_REVIEW
+  weight: 30
+  exact_terms:
+    - scada
+    - smart_grid
+    - traffic_control
+    - electricity_grid
+    - gas_control
+    - water_supply
+    - heating_network
+    - dns_routing_ai
+  phrases:
+    - "critical infrastructure"
+    - "road traffic"
+    - "water supply"
+    - "electricity grid"
+    - "gas supply"
+  context_terms:
+    - safety
+    - operation
+    - control
+    - dispatch
+    - routing
+    - grid
+    - infrastructure
+  guidance: >
+    Determine whether the AI system is a safety component or used in
+    operation/management of critical infrastructure.
+
+- id: AIII_EDUCATION_VOCATIONAL
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(3)"
+  label: "Potential high-risk education/vocational training system"
+  severity: HIGH_RISK_REVIEW
+  weight: 26
+  exact_terms:
+    - admission_score
+    - student_score
+    - predict_grades
+    - student_risk
+    - proctor
+    - cheat_detection
+    - exam_monitor
+  phrases:
+    - "student admission"
+    - "education access"
+    - "vocational training"
+    - "exam proctoring"
+    - "learning assessment"
+  context_terms:
+    - student
+    - school
+    - university
+    - exam
+    - teacher
+    - admission
+    - education
+  guidance: >
+    Check if the system determines access, admission, assignment,
+    assessment, monitoring or detection of prohibited behaviour.
+  contradicts_public_claims:
+    - "no automated grading"
+    - "no student surveillance"
+
+- id: AIII_EMPLOYMENT_WORKER_MANAGEMENT
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(4)"
+  label: "Potential high-risk employment, recruitment or worker-management system"
+  severity: HIGH_RISK_REVIEW
+  weight: 32
+  exact_terms:
+    - auto_reject
+    - cv_score
+    - resume_score
+    - candidate_score
+    - rank_candidate
+    - shift_allocation
+    - worker_monitoring
+    - performance_score
+  phrases:
+    - "filter cv"
+    - "resume parser"
+    - "candidate ranking"
+    - "employee monitoring"
+    - "worker performance"
+    - "task allocation"
+  context_terms:
+    - candidate
+    - employee
+    - worker
+    - job
+    - recruitment
+    - hiring
+    - promotion
+    - termination
+  guidance: >
+    Employment AI is a core high-risk area. Check whether output materially
+    affects hiring, allocation, monitoring or termination.
+  contradicts_public_claims:
+    - "humans make all hiring decisions"
+    - "no automated CV screening"
+    - "no employee monitoring"
+
+- id: AIII_CREDITWORTHINESS_INSURANCE
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(5)"
+  label: "Potential high-risk creditworthiness or essential service access system"
+  severity: HIGH_RISK_REVIEW
+  weight: 30
+  exact_terms:
+    - credit_score
+    - creditworthiness
+    - loan_approval
+    - risk_premium
+    - insurance_score
+    - eligibility_score
+  phrases:
+    - "credit scoring"
+    - "loan approval"
+    - "insurance pricing"
+    - "essential service"
+    - "access to service"
+  context_terms:
+    - consumer
+    - natural_person
+    - individual
+    - eligibility
+    - deny
+    - approve
+    - price
+  guidance: >
+    Assess whether the system evaluates natural persons for credit or
+    essential private/public services.
+  contradicts_public_claims:
+    - "no automated credit decisions"
+    - "humans review all loan applications"
+
+- id: AIII_LAW_ENFORCEMENT_MIGRATION_JUSTICE
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(6-8)"
+  label: "Potential high-risk law enforcement, migration, asylum, border control or justice system"
+  severity: HIGH_RISK_REVIEW
+  weight: 32
+  exact_terms:
+    - law_enforcement
+    - asylum
+    - border_control
+    - migration_risk
+    - case_outcome
+    - evidence_assessment
+    - judge_assistant
+  phrases:
+    - "law enforcement"
+    - "border control"
+    - "asylum decision"
+    - "judicial decision"
+    - "evidence reliability"
+    - "risk assessment"
+  context_terms:
+    - police
+    - court
+    - judge
+    - prosecutor
+    - migrant
+    - asylum
+    - border
+    - evidence
+  guidance: >
+    Separate administrative triage from decisions affecting rights; these
+    domains require close legal and fundamental-rights review.
+
+- id: AIII_DEMOCRATIC_PROCESS
+  bucket: annex_iii_high_risk_signal
+  legal_basis: "EU AI Act Annex III(8)"
+  label: "Potential AI system influencing elections or democratic processes"
+  severity: HIGH_RISK_REVIEW
+  weight: 30
+  exact_terms:
+    - voter_score
+    - voter_influence
+    - election_score
+    - campaign_ai
+    - political_targeting
+  phrases:
+    - "voter influence"
+    - "election influence"
+    - "political targeting"
+    - "referendum outcome"
+  context_terms:
+    - voter
+    - election
+    - referendum
+    - campaign
+    - political
+    - democratic
+  guidance: >
+    Political targeting and democratic influence require intended-purpose
+    review and transparency controls.
+  contradicts_public_claims:
+    - "no political targeting"
+    - "non-partisan platform"

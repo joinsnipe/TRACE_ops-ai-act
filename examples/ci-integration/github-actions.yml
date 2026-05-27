@@ -1,0 +1,43 @@
+# Example: integrate TRACE AI Act Scanner in your repo
+#
+# Copy this file to .github/workflows/ai-act-scan.yml in your project.
+
+name: AI Act Scan
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install scanner
+        run: pip install trace-ai-act-risk-scanner
+
+      - name: Run scan (SARIF for Code Scanning)
+        run: |
+          trace-ai-act-scan . \
+            --sarif trace.sarif \
+            --json > trace-report.json
+
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trace.sarif
+
+      - name: Upload JSON report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trace-report
+          path: trace-report.json
+
+      # Gate the pipeline on Article 5 hits
+      - name: Fail on Article 5 signals
+        run: trace-ai-act-scan . --fail-on article5

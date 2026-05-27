@@ -1,0 +1,30 @@
+# Which governance controls are expected to be present given a detected
+# risk bucket. Drives `readiness_score` and `missing_governance_controls`.
+
+article_5_prohibited_practice_signal:
+  - CTRL_RISK_MANAGEMENT
+  - CTRL_TECHNICAL_DOCUMENTATION
+  - CTRL_HUMAN_OVERSIGHT
+  - CTRL_FRIA_DPIA
+  - CTRL_LOGGING_RECORDKEEPING
+
+annex_iii_high_risk_signal:
+  - CTRL_RISK_MANAGEMENT
+  - CTRL_DATA_GOVERNANCE
+  - CTRL_TECHNICAL_DOCUMENTATION
+  - CTRL_LOGGING_RECORDKEEPING
+  - CTRL_TRANSPARENCY_INSTRUCTIONS
+  - CTRL_HUMAN_OVERSIGHT
+  - CTRL_ROBUSTNESS_CYBERSECURITY
+  - CTRL_POST_MARKET_MONITORING
+  - CTRL_FRIA_DPIA
+
+article_50_transparency_signal:
+  - CTRL_TRANSPARENCY_INSTRUCTIONS
+  - CTRL_LOGGING_RECORDKEEPING
+
+gdpr_data_protection_overlap:
+  - CTRL_DATA_GOVERNANCE
+  - CTRL_FRIA_DPIA
+  - CTRL_TRANSPARENCY_INSTRUCTIONS
+  - CTRL_LOGGING_RECORDKEEPING

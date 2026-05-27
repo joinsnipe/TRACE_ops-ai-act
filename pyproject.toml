@@ -1,42 +1,86 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "trace-ai-act-risk-scanner"
-version = "0.1.0"
+version = "0.2.0"
 description = "Open-source technical scanner for early EU AI Act and GDPR risk signals."
 readme = "README.md"
 requires-python = ">=3.9"
-license = {text = "Apache-2.0"}
-authors = [{name = "SPE Trace Research Unit"}]
-keywords = ["eu-ai-act", "gdpr", "ai-governance", "static-analysis", "regtech", "legaltech"]
+license = { text = "Apache-2.0" }
+authors = [{ name = "SPE Trace Research Unit" }]
+keywords = [
+    "eu-ai-act",
+    "gdpr",
+    "ai-governance",
+    "static-analysis",
+    "regtech",
+    "legaltech",
+    "compliance",
+]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers",
-  "Intended Audience :: Legal Industry",
-  "License :: OSI Approved :: Apache Software License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Security",
-  "Topic :: Software Development :: Quality Assurance",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "PyYAML>=6.0",
 ]
 
-dependencies = []
-
 [project.optional-dependencies]
-yaml = ["PyYAML>=6.0"]
-dev = ["pytest>=7.4", "ruff>=0.5.0"]
+schema = ["jsonschema>=4.21"]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.5.0",
+    "mypy>=1.8",
+    "jsonschema>=4.21",
+]
+
+[project.urls]
+Homepage = "https://github.com/joinsnipe/TRACE_ops-ai-act"
+Documentation = "https://github.com/joinsnipe/TRACE_ops-ai-act/tree/main/docs"
+Issues = "https://github.com/joinsnipe/TRACE_ops-ai-act/issues"
+Changelog = "https://github.com/joinsnipe/TRACE_ops-ai-act/blob/main/CHANGELOG.md"
 
 [project.scripts]
-trace-ai-act-scan = "trace_ai_act_scanner.scanner:main"
+trace-ai-act-scan = "trace_ai_act_scanner.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["trace_ai_act_scanner*"]
+
+[tool.setuptools.package-data]
+trace_ai_act_scanner = [
+    "rules/builtin/*.yaml",
+    "rules/*.yaml",
+    "schemas/*.json",
+]
 
 [tool.ruff]
 line-length = 110
 target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "C4"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers"
+
+[tool.mypy]
+python_version = "3.9"
+strict = false
+ignore_missing_imports = true

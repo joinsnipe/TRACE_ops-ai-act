@@ -1,0 +1,20 @@
+# Example: integrate TRACE AI Act Scanner in GitLab CI
+# Copy to .gitlab-ci.yml in your project.
+
+stages:
+  - scan
+
+ai_act_scan:
+  stage: scan
+  image: python:3.11-slim
+  script:
+    - pip install trace-ai-act-risk-scanner
+    - trace-ai-act-scan . --json > trace-report.json
+    - trace-ai-act-scan . --markdown trace-report.md
+    - trace-ai-act-scan . --fail-on article5
+  artifacts:
+    when: always
+    paths:
+      - trace-report.json
+      - trace-report.md
+    expire_in: 30 days

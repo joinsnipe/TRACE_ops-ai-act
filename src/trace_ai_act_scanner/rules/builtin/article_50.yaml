@@ -1,0 +1,43 @@
+# EU AI Act — Article 50 (Transparency Obligations)
+# https://artificialintelligenceact.eu/article/50/
+
+- id: A50_SYNTHETIC_CONTENT_DISCLOSURE
+  bucket: article_50_transparency_signal
+  legal_basis: "EU AI Act Article 50"
+  label: "Potential synthetic content / deepfake transparency obligation"
+  severity: TRANSPARENCY_REVIEW
+  weight: 22
+  exact_terms:
+    - deepfake
+    - synthetic_media
+    - generate_image
+    - generate_audio
+    - generate_video
+    - text_to_image
+    - voice_clone
+    - tts
+  phrases:
+    - "synthetic content"
+    - "machine readable"
+    - "ai generated"
+    - "content provenance"
+    - "watermark missing"
+    - "generated media"
+  context_terms:
+    - publish
+    - export
+    - upload
+    - display
+    - user
+    - public
+    - media
+    - watermark
+    - label
+    - metadata
+  guidance: >
+    Do not only detect generation. Check output path and whether
+    disclosure/watermark/provenance is implemented.
+  contradicts_public_claims:
+    - "all content is human-made"
+    - "no AI-generated media"
+    - "watermarked AI content"

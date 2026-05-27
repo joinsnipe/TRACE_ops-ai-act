@@ -1,0 +1,9 @@
+{
+  "ai_system_name": "Acme HireBot",
+  "version": "2.4.0",
+  "intended_purpose": "Pre-screening of CVs to assist human recruiters. Final decision is always human.",
+  "operator_role": "deployer",
+  "target_market": ["EU", "ES", "DE", "FR"],
+  "deployment_context": "Internal recruiter dashboard, used by Acme HR team across EU offices.",
+  "exclude": ["node_modules", "vendor", "build"]
+}

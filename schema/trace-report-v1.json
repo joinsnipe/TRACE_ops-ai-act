@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/joinsnipe/TRACE_ops-ai-act/schema/trace-report-v1.json",
+  "title": "TRACE AI Act Scanner Report",
+  "description": "Public output contract emitted by trace-ai-act-scan. Versioned with semver: v1.x is additive, v2 will be breaking. The proprietary SPE Audit Reporting layer consumes this contract; downstream tools should validate against this schema before processing.",
+  "type": "object",
+  "required": ["schema_version", "summary", "signals", "disclaimer"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.[0-9]+(\\.[0-9]+)?$",
+      "description": "Schema version. v1.x is additive only; v2 will be breaking."
+    },
+    "summary": { "$ref": "#/$defs/Summary" },
+    "signals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Signal" }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/ControlHit" }
+      }
+    },
+    "config": {
+      "type": "object",
+      "description": "The intended-purpose/context config supplied to the scanner.",
+      "additionalProperties": true
+    },
+    "self_declaration": {
+      "$ref": "#/$defs/SelfDeclaration",
+      "description": "OPTIONAL channel for the scanned organisation to declare public claims and intended purpose. Consumed by alignment analysis (narrative-vs-code)."
+    },
+    "disclaimer": { "type": "string" }
+  },
+  "$defs": {
+    "Summary": {
+      "type": "object",
+      "required": [
+        "target", "files_scanned", "signals_total",
+        "risk_score", "readiness_score", "viability",
+        "blockers", "potential_high_risk", "transparency_risks",
+        "gdpr_overlaps", "governance_controls_detected",
+        "missing_governance_controls"
+      ],
+      "properties": {
+        "target": { "type": "string" },
+        "files_scanned": { "type": "integer", "minimum": 0 },
+        "signals_total": { "type": "integer", "minimum": 0 },
+        "risk_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "readiness_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "viability": {
+          "type": "string",
+          "enum": [
+            "BLOCKED_UNTIL_LEGAL_AND_TECHNICAL_REVIEW",
+            "ARTICLE_5_REVIEW_REQUIRED",
+            "HIGH_RISK_WITH_INSUFFICIENT_EVIDENCE",
+            "CONDITIONALLY_VIABLE_WITH_HIGH_RISK_CONTROLS",
+            "MODERATE_RISK_REVIEW_REQUIRED",
+            "LOW_SIGNAL_NOT_A_COMPLIANCE_VERDICT"
+          ]
+        },
+        "blockers": { "type": "integer", "minimum": 0 },
+        "potential_high_risk": { "type": "integer", "minimum": 0 },
+        "transparency_risks": { "type": "integer", "minimum": 0 },
+        "gdpr_overlaps": { "type": "integer", "minimum": 0 },
+        "governance_controls_detected": { "type": "integer", "minimum": 0 },
+        "missing_governance_controls": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "Signal": {
+      "type": "object",
+      "required": [
+        "rule_id", "bucket", "legal_basis", "label", "severity",
+        "weight", "file", "line", "symbol", "matched",
+        "evidence", "confidence"
+      ],
+      "properties": {
+        "rule_id": { "type": "string" },
+        "bucket": {
+          "type": "string",
+          "enum": [
+            "article_5_prohibited_practice_signal",
+            "annex_iii_high_risk_signal",
+            "article_50_transparency_signal",
+            "gdpr_data_protection_overlap"
+          ]
+        },
+        "legal_basis": { "type": "string" },
+        "label": { "type": "string" },
+        "severity": { "type": "string" },
+        "weight": { "type": "integer" },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "symbol": { "type": "string" },
+        "matched": { "type": "string" },
+        "evidence": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "node_type": { "type": "string" },
+        "guidance": { "type": "string" }
+      }
+    },
+    "ControlHit": {
+      "type": "object",
+      "required": ["file", "line", "matched"],
+      "properties": {
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "matched": { "type": "string" },
+        "node_type": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "SelfDeclaration": {
+      "type": "object",
+      "description": "Optional self-declaration block where the scanned organisation publishes its intended purpose, public claims and deployment context. Enables alignment analysis against detected signals.",
+      "properties": {
+        "intended_purpose": {
+          "type": "string",
+          "description": "Intended purpose of the AI system, in plain language."
+        },
+        "public_claims": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Verbatim claims the organisation makes about the system in public-facing materials (website, marketing, policies)."
+        },
+        "public_urls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "URLs from which the public_claims were taken or where they can be verified."
+        },
+        "deployment_context": {
+          "type": "string",
+          "description": "Where, by whom and for which affected persons the system is deployed."
+        },
+        "operator_role": {
+          "type": "string",
+          "enum": ["provider", "deployer", "importer", "distributor", "other"]
+        },
+        "target_market": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "ISO country codes or regions where the system is offered (e.g. 'EU', 'ES', 'DE')."
+        },
+        "ai_system_name": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "summary": {
+    "target": "./my-app",
+    "files_scanned": 47,
+    "signals_total": 3,
+    "risk_score": 28,
+    "readiness_score": 75,
+    "viability": "MODERATE_RISK_REVIEW_REQUIRED",
+    "blockers": 0,
+    "potential_high_risk": 1,
+    "transparency_risks": 0,
+    "gdpr_overlaps": 2,
+    "governance_controls_detected": 6,
+    "missing_governance_controls": ["CTRL_FRIA_DPIA", "CTRL_POST_MARKET_MONITORING"],
+    "notes": []
+  },
+  "signals": [],
+  "controls": {},
+  "config": {
+    "operator_role": "deployer",
+    "target_market": ["EU", "ES"]
+  },
+  "self_declaration": {
+    "ai_system_name": "Acme HireBot",
+    "version": "2.4.0",
+    "intended_purpose": "Pre-screening of CVs to assist human recruiters. Final decision is always human.",
+    "public_claims": [
+      "We do not use biometric data",
+      "All hiring decisions are made by humans",
+      "GDPR-compliant by design"
+    ],
+    "public_urls": [
+      "https://acme.example/ai-ethics",
+      "https://acme.example/privacy"
+    ],
+    "deployment_context": "Internal recruiter dashboard, used by Acme HR team across EU offices.",
+    "operator_role": "deployer",
+    "target_market": ["EU", "ES", "DE", "FR"]
+  },
+  "disclaimer": "This tool identifies technical and documentary signals that may require EU AI Act/GDPR review. It is not legal advice and does not determine compliance."
+}

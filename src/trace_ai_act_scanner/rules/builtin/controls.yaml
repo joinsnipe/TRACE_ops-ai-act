@@ -1,0 +1,158 @@
+# EU AI Act — Governance Controls (Chapter III, Sections 2-3)
+# These rules represent evidence of governance controls, NOT risks.
+# Detecting them increases readiness_score and reduces missing_controls.
+
+- id: CTRL_RISK_MANAGEMENT
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 9"
+  label: "Risk management system"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - risk_management
+    - risk_register
+    - risk_assessment
+  phrases:
+    - "risk management"
+    - "risk register"
+
+- id: CTRL_DATA_GOVERNANCE
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 10 + GDPR"
+  label: "Data governance / data quality"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - data_governance
+    - data_quality
+    - bias_audit
+    - dataset_card
+  phrases:
+    - "data governance"
+    - "data quality"
+    - "bias audit"
+    - "dataset card"
+
+- id: CTRL_TECHNICAL_DOCUMENTATION
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 11"
+  label: "Technical documentation"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - technical_documentation
+    - model_card
+    - system_card
+    - conformity
+  phrases:
+    - "technical documentation"
+    - "model card"
+    - "system card"
+    - "conformity assessment"
+
+- id: CTRL_LOGGING_RECORDKEEPING
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 12"
+  label: "Logging / record-keeping"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - audit_log
+    - logging
+    - recordkeeping
+    - traceability
+  phrases:
+    - "audit log"
+    - "record keeping"
+    - "record-keeping"
+    - "traceability"
+
+- id: CTRL_TRANSPARENCY_INSTRUCTIONS
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 13 + Article 50"
+  label: "Transparency / instructions for use"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - instructions_for_use
+    - disclosure
+    - watermark
+    - provenance
+    - c2pa
+  phrases:
+    - "instructions for use"
+    - "user disclosure"
+    - "machine-readable"
+    - "content provenance"
+
+- id: CTRL_HUMAN_OVERSIGHT
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 14"
+  label: "Human oversight / override"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - human_review
+    - human_oversight
+    - override
+    - appeal
+    - stop_button
+  phrases:
+    - "human oversight"
+    - "human review"
+    - "manual review"
+    - "stop button"
+    - "appeal process"
+
+- id: CTRL_ROBUSTNESS_CYBERSECURITY
+  bucket: governance_control
+  legal_basis: "EU AI Act Article 15"
+  label: "Accuracy, robustness and cybersecurity"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - robustness
+    - cybersecurity
+    - adversarial
+    - data_poisoning
+    - model_poisoning
+    - fail_safe
+    - fallback
+  phrases:
+    - "accuracy metrics"
+    - "adversarial testing"
+    - "data poisoning"
+    - "model poisoning"
+    - "fail safe"
+
+- id: CTRL_POST_MARKET_MONITORING
+  bucket: governance_control
+  legal_basis: "EU AI Act provider obligations"
+  label: "Post-market monitoring / incident handling"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - post_market
+    - incident_report
+    - monitoring
+    - corrective_action
+  phrases:
+    - "post-market monitoring"
+    - "serious incident"
+    - "corrective action"
+
+- id: CTRL_FRIA_DPIA
+  bucket: governance_control
+  legal_basis: "EU AI Act fundamental rights + GDPR DPIA"
+  label: "FRIA/DPIA evidence"
+  severity: CONTROL
+  weight: -8
+  exact_terms:
+    - fria
+    - dpia
+    - impact_assessment
+    - fundamental_rights
+  phrases:
+    - "fundamental rights impact assessment"
+    - "data protection impact assessment"
+    - "impact assessment"

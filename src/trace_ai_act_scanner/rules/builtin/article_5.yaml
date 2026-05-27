@@ -1,0 +1,236 @@
+# EU AI Act — Article 5 (Prohibited AI Practices)
+# https://artificialintelligenceact.eu/article/5/
+#
+# Each rule's `contradicts_public_claims` is OPTIONAL metadata consumed by the
+# proprietary SPE Audit Reporting layer for narrative-vs-code alignment. The
+# open-source scanner ignores it.
+
+- id: A5_MANIPULATION_SUBLIMINAL_EXPLOITATIVE
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5"
+  label: "Potential manipulative, subliminal or exploitative practice"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 35
+  exact_terms:
+    - subliminal
+    - manipulate
+    - manipulation
+    - exploit
+    - exploitative
+    - vulnerability
+  phrases:
+    - "dark pattern"
+    - "cognitive distortion"
+    - "materially distort"
+    - "behaviour manipulation"
+    - "behavior manipulation"
+  context_terms:
+    - user
+    - person
+    - child
+    - consumer
+    - decision
+    - choice
+    - behaviour
+    - behavior
+  guidance: >
+    Check whether the system materially distorts behaviour or exploits
+    vulnerability. If yes, legal review is mandatory before deployment.
+  contradicts_public_claims:
+    - "we do not manipulate users"
+    - "ethical UX design"
+    - "no dark patterns"
+
+- id: A5_SOCIAL_SCORING
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5"
+  label: "Potential social scoring of natural persons"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 40
+  exact_terms:
+    - social_score
+    - socialscore
+    - citizen_score
+    - citizen_trust
+    - trust_score
+    - reputation_score
+  phrases:
+    - "social credit"
+    - "citizen trust"
+    - "behaviour score"
+    - "behavior score"
+  context_terms:
+    - person
+    - citizen
+    - individual
+    - natural_person
+    - public_service
+    - eligibility
+  guidance: >
+    Confirm whether individuals are evaluated over time using social behaviour
+    or personal characteristics with detrimental treatment.
+  contradicts_public_claims:
+    - "we do not rank users"
+    - "no social scoring"
+
+- id: A5_BIOMETRIC_CATEGORISATION_SENSITIVE
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5 + GDPR special categories"
+  label: "Potential biometric categorisation to infer sensitive attributes"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 40
+  exact_terms:
+    - race
+    - ethnicity
+    - religion
+    - political
+    - sexual_orientation
+    - trade_union
+  phrases:
+    - "biometric categorisation"
+    - "biometric categorization"
+    - "infer race"
+    - "infer ethnicity"
+    - "political opinion"
+    - "trade union"
+    - "sexual orientation"
+  context_terms:
+    - classify
+    - categorize
+    - categorise
+    - infer
+    - deduce
+    - attribute
+    - sensitive
+  required_context:
+    - biometric
+    - face
+    - fingerprint
+    - iris
+    - gait
+    - voiceprint
+    - facial
+  negative_terms:
+    - hair_colour
+    - hair_color
+    - eye_colour
+    - eye_color
+    - product_filter
+    - avatar_filter
+  guidance: >
+    Check if biometric data is used to infer protected or sensitive
+    attributes. Requires biometric + sensitive context.
+  contradicts_public_claims:
+    - "no biometric data"
+    - "no facial recognition"
+    - "no profiling of sensitive attributes"
+    - "anonymous by design"
+
+- id: A5_REAL_TIME_REMOTE_BIOMETRIC_ID
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5"
+  label: "Potential real-time remote biometric identification in public spaces"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 45
+  exact_terms:
+    - face_recognition
+    - facial_recognition
+    - remote_biometric
+    - biometric_id
+    - cctv
+    - live_camera
+    - surveillance
+  phrases:
+    - "real time biometric"
+    - "real-time biometric"
+    - "remote biometric identification"
+    - "public space"
+    - "publicly accessible"
+  context_terms:
+    - live
+    - real_time
+    - realtime
+    - identify
+    - camera
+    - crowd
+    - law_enforcement
+    - public
+  guidance: >
+    This is one of the highest-risk blockers. Determine law-enforcement
+    purpose, public-space context, real-time nature and exceptions.
+  contradicts_public_claims:
+    - "no facial recognition"
+    - "no surveillance"
+    - "privacy by design"
+
+- id: A5_PREDICTIVE_POLICING_INDIVIDUAL
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5"
+  label: "Potential individual predictive policing / criminal risk assessment"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 40
+  exact_terms:
+    - predict_crime
+    - crime_prediction
+    - recidivism
+    - offender_score
+    - criminal_risk
+    - offense_probability
+    - offence_probability
+  phrases:
+    - "predictive policing"
+    - "risk of committing"
+    - "criminal offence"
+    - "criminal offense"
+  context_terms:
+    - individual
+    - person
+    - natural_person
+    - law_enforcement
+    - police
+    - profile
+    - risk_score
+  guidance: >
+    Differentiate individual prediction from area-level resource allocation
+    or evidence-based investigative support.
+  contradicts_public_claims:
+    - "we do not predict individual criminal behaviour"
+    - "no predictive policing"
+
+- id: A5_EMOTION_RECOGNITION_WORK_EDU
+  bucket: article_5_prohibited_practice_signal
+  legal_basis: "EU AI Act Article 5 / Annex III where not prohibited"
+  label: "Potential emotion recognition in workplace or education"
+  severity: ARTICLE_5_REVIEW_REQUIRED
+  weight: 35
+  exact_terms:
+    - emotion
+    - mood
+    - affect
+    - stress
+    - sentiment_facial
+    - deepface
+    - fer
+    - voice_stress
+  phrases:
+    - "emotion recognition"
+    - "infer emotion"
+    - "detect mood"
+    - "facial sentiment"
+    - "voice stress"
+  context_terms:
+    - employee
+    - worker
+    - candidate
+    - student
+    - school
+    - exam
+    - classroom
+    - workplace
+    - education
+  guidance: >
+    If used in workplace or education to infer emotions, treat as blocker.
+    If used for safety/fatigue exceptions, document narrowly.
+  contradicts_public_claims:
+    - "no emotion analysis"
+    - "no employee monitoring"

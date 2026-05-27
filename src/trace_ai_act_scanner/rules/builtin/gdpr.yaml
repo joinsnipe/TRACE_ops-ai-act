@@ -1,0 +1,46 @@
+# GDPR (Regulation (EU) 2016/679) — Overlap with EU AI Act
+# https://gdpr-info.eu/
+
+- id: GDPR_PERSONAL_DATA_PROCESSING
+  bucket: gdpr_data_protection_overlap
+  legal_basis: "GDPR + EU AI Act complementarity"
+  label: "Potential personal data processing / profiling overlap"
+  severity: DATA_PROTECTION_REVIEW
+  weight: 18
+  exact_terms:
+    - personal_data
+    - pii
+    - profile
+    - profiling
+    - user_id
+    - email
+    - phone
+    - location
+    - biometric
+    - health
+    - criminal
+    - sensitive
+  phrases:
+    - "personal data"
+    - "data subject"
+    - "special category"
+    - "automated decision"
+    - "solely automated"
+    - "data minimisation"
+    - "data minimization"
+  context_terms:
+    - collect
+    - process
+    - store
+    - infer
+    - predict
+    - identify
+    - consent
+    - legitimate_interest
+  guidance: >
+    If personal data is processed, GDPR controls must sit beside AI Act
+    controls: lawful basis, minimisation, transparency, rights, security.
+  contradicts_public_claims:
+    - "we do not collect personal data"
+    - "fully anonymous"
+    - "GDPR-compliant by design"
