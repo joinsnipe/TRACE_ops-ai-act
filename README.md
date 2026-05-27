@@ -27,6 +27,8 @@
 The output is a **structured JSON report** (schema v1, see [`schema/`](schema/)), a human-readable Markdown report, and optionally SARIF for GitHub Code Scanning.
 
 > ⚠️ **This is not legal advice and not a compliance certification.** It is technical triage. Read [`docs/legal/DISCLAIMER.md`](docs/legal/DISCLAIMER.md).
+> 
+> 📚 **Research & Methodology:** The development and auditing approach for the EU AI Act driven by TRACE can be consulted in our official paper: **[Zenodo Record: 20284633](https://zenodo.org/records/20284633)**
 
 ---
 
