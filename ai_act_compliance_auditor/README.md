@@ -69,11 +69,8 @@ The script scans for structural evidence of the following regulatory categories:
    python trace_ai_act_extractor.py /path/to/your/codebase --json > ai_act_report.json
    ```
 
-4. **Verify the output (Optional but encouraged):**
-   Open `ai_act_report.json` with any text editor to verify that no sensitive IP was captured.
-
-5. **Send it to TRACE:**
-   Send the JSON file to your TRACE Auditor to receive the official compliance certification and risk diagnostic.
+4. **Analyze the Results:**
+   Integrate `ai_act_report.json` into your CI/CD pipeline or pass it to your compliance team to evaluate the structural risks detected.
 
 ---
 *Maintained by TRACE™ - Forensic Intelligence & Structural Diagnostics.*
