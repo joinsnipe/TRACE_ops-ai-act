@@ -32,11 +32,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Omit code snippets from reports to protect IP",
     )
     parser.add_argument(
-        "--no-ignore",
-        action="store_true",
-        help="Ignore .traceignore file and show all raw signals",
-    )
-    parser.add_argument(
         "--rules-dir",
         help="Optional directory with additional/override rules (*.yaml)",
     )
@@ -70,7 +65,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         config=config,
         no_snippets=args.no_snippets,
         custom_rules_dir=rules_dir,
-        no_ignore=args.no_ignore,
     )
 
     if args.markdown:

@@ -33,11 +33,6 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Applicability:** {s.applicability.get('status', 'UNKNOWN')}",
         f"  - {s.applicability.get('message', '')}",
         f"**Viability:** `{s.viability}`",
-    ]
-    if s.no_ignore_used:
-        lines.insert(2, "**Raw scan (--no-ignore):** `True`")
-        
-    lines += [
         "",
         "## Signal summary",
         "",

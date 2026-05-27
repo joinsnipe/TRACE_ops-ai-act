@@ -83,7 +83,6 @@ class ScanSummary:
     gdpr_overlaps: int
     governance_controls_detected: int
     missing_governance_controls: List[str]
-    no_ignore_used: bool = False
     notes: List[str] = field(default_factory=list)
 
 
