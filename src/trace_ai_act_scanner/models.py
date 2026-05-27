@@ -71,6 +71,7 @@ class ScanSummary:
     files_scanned: int
     signals_total: int
     risk_score: int
+    coverage_confidence: float
     readiness_score: int
     viability: str
     blockers: int

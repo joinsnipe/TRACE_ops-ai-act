@@ -39,8 +39,16 @@
     - legitimate_interest
   guidance: >
     If personal data is processed, GDPR controls must sit beside AI Act
-    controls: lawful basis, minimisation, transparency, rights, security.
+    controls. If applied to B2B or system telemetry, add a .traceignore entry.
   contradicts_public_claims:
     - "we do not collect personal data"
     - "fully anonymous"
     - "GDPR-compliant by design"
+  negative_terms:
+    - company
+    - b2b
+    - telemetry
+    - system_data
+    - metadata
+    - load_balancer
+    - healthcheck

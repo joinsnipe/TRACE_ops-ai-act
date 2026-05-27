@@ -23,6 +23,7 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"**Files scanned:** {s.files_scanned}",
         f"**Signals found:** {s.signals_total}",
         f"**Risk score:** {s.risk_score}/100",
+        f"**Coverage confidence:** {s.coverage_confidence}",
         f"**Governance readiness:** {s.readiness_score}/100",
         f"**Viability:** `{s.viability}`",
         "",
@@ -34,7 +35,18 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         f"- GDPR/data-protection overlaps: {s.gdpr_overlaps}",
         f"- Governance controls detected: {s.governance_controls_detected}",
         "",
+        "### Severity Breakdown",
+        "| Severity | Count |",
+        "| -------- | ----- |",
     ]
+    
+    severity_counts = {}
+    for sig in report.signals:
+        severity_counts[sig.severity] = severity_counts.get(sig.severity, 0) + 1
+        
+    for sev in sorted(severity_counts.keys()):
+        lines.append(f"| {sev} | {severity_counts[sev]} |")
+    lines.append("")
 
     controls = _control_lookup()
     if s.missing_governance_controls:
@@ -47,20 +59,28 @@ def render_markdown(report: ScanReport, max_signals: int = 30) -> str:
         lines.append("")
 
     lines += ["## Top signals", ""]
+    
+    # Group signals by severity
+    by_severity = {}
     for sig in report.signals[:max_signals]:
-        lines += [
-            f"### {sig.severity}: {sig.label}",
-            f"- Rule: `{sig.rule_id}`",
-            f"- Legal basis: {sig.legal_basis}",
-            f"- Location: `{sig.file}:{sig.line}`",
-            f"- Matched: `{sig.matched}` | Confidence: {sig.confidence}",
-            f"- Guidance: {sig.guidance}",
-            "",
-            "```",
-            sig.evidence,
-            "```",
-            "",
-        ]
+        by_severity.setdefault(sig.severity, []).append(sig)
+        
+    for sev, sigs in by_severity.items():
+        lines += [f"### {sev}", ""]
+        for sig in sigs:
+            lines += [
+                f"#### {sig.label}",
+                f"- Rule: `{sig.rule_id}`",
+                f"- Legal basis: {sig.legal_basis}",
+                f"- Location: [{sig.file}:{sig.line}](./{sig.file}#L{sig.line})",
+                f"- Matched: `{sig.matched}` | Confidence: {sig.confidence}",
+                f"- Guidance: {sig.guidance}",
+                "",
+                "```",
+                sig.evidence,
+                "```",
+                "",
+            ]
 
     if report.controls:
         lines += ["## Detected governance controls", ""]

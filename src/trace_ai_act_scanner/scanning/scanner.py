@@ -24,6 +24,7 @@ from trace_ai_act_scanner.rules import (
     load_required_controls,
     merge_rules,
 )
+from trace_ai_act_scanner.scanning.ignore import filter_signals, load_ignores
 from trace_ai_act_scanner.scanning.redaction import file_hash, redact_secrets
 from trace_ai_act_scanner.scanning.walker import iter_files
 
@@ -143,7 +144,14 @@ def scan(
         for cid, hits in file_controls.items():
             controls.setdefault(cid, []).extend(hits)
 
-    risk_score = compute_risk_score(all_signals, config)
+    # Apply .traceignore filtering
+    ignores = load_ignores(target_path)
+    initial_signals_count = len(all_signals)
+    if ignores:
+        all_signals = filter_signals(all_signals, ignores)
+    ignored_count = initial_signals_count - len(all_signals)
+
+    risk_score, coverage_confidence = compute_risk_score(all_signals, config)
     readiness_score, missing_controls = compute_readiness(
         all_signals, controls, required_controls_by_bucket
     )
@@ -188,6 +196,8 @@ def scan(
             "GDPR overlap detected: AI Act review should be paired with "
             "privacy-by-design/DPIA analysis where personal data is involved."
         )
+    if ignored_count > 0:
+        notes.append(f"{ignored_count} signals were silenced via .traceignore exclusions.")
 
     control_count = sum(1 for cid, hits in controls.items() if hits)
 
@@ -196,6 +206,7 @@ def scan(
         files_scanned=files_scanned,
         signals_total=len(all_signals),
         risk_score=risk_score,
+        coverage_confidence=coverage_confidence,
         readiness_score=readiness_score,
         viability=classify_viability(risk_score, blockers, high_risk, len(missing_controls)),
         blockers=blockers,

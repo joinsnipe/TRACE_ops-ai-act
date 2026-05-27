@@ -67,11 +67,20 @@
     - public_service
     - eligibility
   guidance: >
-    Confirm whether individuals are evaluated over time using social behaviour
-    or personal characteristics with detrimental treatment.
+    If applied to natural persons: conduct FRIA and implement human oversight.
+    If applied to legal entities: update documentation to state 'no natural person evaluation' and add a .traceignore entry.
   contradicts_public_claims:
     - "we do not rank users"
     - "no social scoring"
+  negative_terms:
+    - company
+    - enterprise
+    - corporate
+    - legal_entity
+    - b2b
+    - tax_id
+    - employees_count
+    - legal_form
 
 - id: A5_BIOMETRIC_CATEGORISATION_SENSITIVE
   bucket: article_5_prohibited_practice_signal
