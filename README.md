@@ -10,7 +10,7 @@
 [![Schema](https://img.shields.io/badge/schema-v1.0-green)](schema/trace-report-v1.json)
 
 > **Open-source technical scanner for early EU AI Act and GDPR risk signals.**
-> Runs **locally**, on your machine, in your CI. We never see your code.
+> Runs **locally**, on your machine, in your CI.
 
 ---
 
