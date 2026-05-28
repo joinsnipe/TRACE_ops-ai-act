@@ -67,7 +67,8 @@
             "HIGH_RISK_WITH_INSUFFICIENT_EVIDENCE",
             "CONDITIONALLY_VIABLE_WITH_HIGH_RISK_CONTROLS",
             "MODERATE_RISK_REVIEW_REQUIRED",
-            "LOW_SIGNAL_NOT_A_COMPLIANCE_VERDICT"
+            "LOW_SIGNAL_NOT_A_COMPLIANCE_VERDICT",
+            "NO_ACTION_REQUIRED_BY_SCANNER"
           ]
         },
         "blockers": { "type": "integer", "minimum": 0 },
