@@ -34,11 +34,7 @@ The output is a **structured JSON report** (schema v1, see [`schema/`](schema/))
 
 ## Install
 
-```bash
-pip install trace-ai-act-risk-scanner
-```
-
-Or from source:
+Since the package is currently in rapid development and not yet published to PyPI, install it directly from source:
 
 ```bash
 git clone https://github.com/joinsnipe/TRACE_ops-ai-act.git

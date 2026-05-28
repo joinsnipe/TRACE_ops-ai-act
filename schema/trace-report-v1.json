@@ -39,7 +39,7 @@
       "type": "object",
       "required": [
         "target", "files_scanned", "signals_total",
-        "risk_score", "readiness_score", "viability",
+        "risk_score", "readiness_state", "viability",
         "blockers", "potential_high_risk", "transparency_risks",
         "gdpr_overlaps", "governance_controls_detected",
         "missing_governance_controls"
@@ -49,7 +49,16 @@
         "files_scanned": { "type": "integer", "minimum": 0 },
         "signals_total": { "type": "integer", "minimum": 0 },
         "risk_score": { "type": "integer", "minimum": 0, "maximum": 100 },
-        "readiness_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "readiness_state": { "type": "string" },
+        "coverage_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "applicability": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "silenced_summary": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "viability": {
           "type": "string",
           "enum": [

@@ -5,7 +5,15 @@
     "files_scanned": 47,
     "signals_total": 3,
     "risk_score": 28,
-    "readiness_score": 75,
+    "readiness_state": "ALIGNED",
+    "coverage_confidence": 0.8,
+    "applicability": {
+      "article_5": "Not Applicable",
+      "annex_iii": "Applicable (Employment)"
+    },
+    "silenced_summary": {
+      "total_silenced": 0
+    },
     "viability": "MODERATE_RISK_REVIEW_REQUIRED",
     "blockers": 0,
     "potential_high_risk": 1,
